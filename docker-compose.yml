@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  client:
+    image: fs-gui-client
+    build:
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
