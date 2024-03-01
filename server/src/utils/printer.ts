@@ -1,8 +1,11 @@
 import FileSystem from "../controllers/fileSystem"
-import SymbolicLinkNode from "../models/SymbolicLinkNode"
-import FileNode from "../models/fileNode"
-import FolderNode from "../models/folderNode"
-import { BaseNode, NodeType } from "../models/node"
+import {
+  NodeType,
+  BaseNode,
+  FolderNode,
+  FileNode,
+  SymbolicLinkNode,
+} from '../models'
 
 function printTab(n: number) {
   process.stdout.write(' '.repeat(n * 2))
@@ -14,41 +17,53 @@ function getProperties(n: FileNode | FolderNode): string {
   return props.length > 0 ? `[${props.join(', ')}]` : ''
 }
 
-export default function printNodeHierarchy(node: BaseNode | null, fs: FileSystem, indent = 0) {
-  if (!node) {
-    return
+class SystemHierarchyPrinter {
+  fs: FileSystem
+
+  constructor(fs: FileSystem) {
+    this.fs = fs
   }
 
-  switch (node.type) {
-    case NodeType.Folder:
-      const folder = <FolderNode>node
-      
-      printTab(indent)
-      console.log(`/${node.name} ${getProperties(folder)}`)
-
-      Object.keys(folder.children).forEach((child) => {
-        // add indent for folder's children
-        printNodeHierarchy(folder.children[child], fs, indent + 1)
-      })
-      break
-
-    case NodeType.SymbolicLink:
-      const link = <SymbolicLinkNode>node
-      try {
-        const realTarget = fs.getNode(link.target)
-        printNodeHierarchy(realTarget, fs, indent)
-      } catch (e) {
-        // fallback to print the symbolic link name
+  printNodeHierarchy(node: BaseNode | null, indent = 0, displayName = node?.name) {
+    if (!node) {
+      return
+    }
+  
+    switch (node.type) {
+      case NodeType.Folder:
+        const folder = <FolderNode>node
+        
         printTab(indent)
-        console.log(`* ${node.name}`)
-      }
-      break
-
-    case NodeType.File:
-      const file = <FileNode>node
-
-      printTab(indent)
-      console.log(`- ${file.name} ${getProperties(file)}`)
-      break
+        console.log(`/${displayName} ${getProperties(folder)}`)
+  
+        Object.keys(folder.children).forEach((child) => {
+          // add indent for folder's children
+          this.printNodeHierarchy(folder.children[child], indent + 1)
+        })
+        break
+  
+      case NodeType.SymbolicLink:
+        const link = <SymbolicLinkNode>node
+  
+        try {
+          const realTarget = this.fs.getNode(link.target)
+          const linkDisplayName = `${link.name}*`
+          this.printNodeHierarchy(realTarget, indent, linkDisplayName)
+        } catch (e) {
+          // fallback to print the symbolic link name
+          printTab(indent)
+          console.log(`* ${displayName}`)
+        }
+        break
+  
+      case NodeType.File:
+        const file = <FileNode>node
+  
+        printTab(indent)
+        console.log(`- ${displayName} ${getProperties(file)}`)
+        break
+    }
   }
 }
+
+export default SystemHierarchyPrinter
