@@ -32,6 +32,7 @@ class FileSystem {
         case NodeType.Folder:
           currentNode = (<FolderNode>currentNode).children[nextPart] || null
           break
+
         case NodeType.SymbolicLink:          
           const targetPath = (<SymbolicLinkNode>currentNode).target
 
@@ -52,8 +53,8 @@ class FileSystem {
           } else {
             currentNode = null
           }
-          
           break
+
         // handle when trying to open a file or invalid node type
         case NodeType.File:
           errors.push(new Error(
