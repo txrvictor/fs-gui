@@ -34,7 +34,7 @@ class SystemHierarchyPrinter {
         const folder = <FolderNode>node
         
         printTab(indent)
-        console.log(`/${displayName} ${getProperties(folder)}`)
+        console.log(`${displayName}/ ${getProperties(folder)}`)
   
         Object.keys(folder.children).forEach((child) => {
           // add indent for folder's children
@@ -47,7 +47,7 @@ class SystemHierarchyPrinter {
   
         try {
           const realTarget = this.fs.getNode(link.target)
-          const linkDisplayName = `${link.name}*`
+          const linkDisplayName = `*${link.name}`
           this.printNodeHierarchy(realTarget, indent, linkDisplayName)
         } catch (e) {
           // fallback to print the symbolic link name

@@ -16,12 +16,9 @@ class FileSystem {
       this.root = initialRoot
     } else {
       this.root = {
-        name: 'root',
+        name: '', // root
         type: NodeType.Folder,
-        properties: {
-          hide: false,
-          executable: false,
-        },
+        properties: {hide: false, executable: false},
         children: {}
       }
     }
@@ -83,16 +80,33 @@ class FileSystem {
     return currentNode
   }
 
-  private getNodeNameAndPath(path: string): {nodeName: string, parentPath: string} {
-    const parts = path.split('/').filter((part) => part !== '')
-
-    const nodeName = parts.pop()
+  private getNodeName(path: string): string {
+    const nodeName = path.split('/').filter((part) => part !== '').pop()
     if (!nodeName) {
       throw new Error(`Invalid name: ${nodeName}`)
     }
-    const parentPath = parts.join('/')
+    return nodeName
+  }
 
-    return {nodeName, parentPath}
+  private getParentNodePath(path: string): string {
+    const parts = path.split('/').filter((part) => part !== '')
+    parts.pop()
+
+    return parts.join('/')
+  }
+
+  private getParentNode(path: string): FolderNode {
+    const parentPath = this.getParentNodePath(path)
+
+    const parentNode = parentPath === '' ? this.root : this.getNode(parentPath)
+    if (!parentNode) {
+      throw new Error(`Parent directory "${parentPath}" not found`)
+    }
+    if (parentNode.type !== NodeType.Folder) {
+      throw new Error(`Path "${parentPath}" is not a directory`)
+    }
+
+    return <FolderNode>parentNode
   }
 
   private linkNodeToParent(parent: BaseNode, node: SystemNode) {
@@ -104,17 +118,14 @@ class FileSystem {
     folder.children[node.name] = node
   }
 
-  private addNode(path: string, node: SystemNode) {
-    const {nodeName, parentPath} = this.getNodeNameAndPath(path)
+  private createNode(path: string, node: SystemNode) {
+    const parentNode = this.getParentNode(path)
 
-    const parentNode = parentPath === '' ? this.root : this.getNode(parentPath)
-    if (parentNode) {
-      // make sure node has the same name as given in the path
-      node.name = nodeName
-      this.linkNodeToParent(parentNode, node)
-    } else {
-      throw new Error(`Parent directory "${parentPath}" not found`)
-    }
+    // make sure node has the same name as given in the path
+    const nodeNameFromPath = this.getNodeName(path)
+    node.name = nodeNameFromPath
+
+    this.linkNodeToParent(parentNode, node)
   }
 
   addFile(path: string) {
@@ -123,7 +134,7 @@ class FileSystem {
       type: NodeType.File,
       properties: {hide: false, executable: false}
     }
-    this.addNode(path, newFile)
+    this.createNode(path, newFile)
   }
 
   addDirectory(path: string) {
@@ -133,7 +144,7 @@ class FileSystem {
       properties: {hide: false, executable: false},
       children: {}
     }
-    this.addNode(path, newDirectory)
+    this.createNode(path, newDirectory)
   }
 
   addSymbolicLink(path: string, target: string) {
@@ -142,9 +153,42 @@ class FileSystem {
       type: NodeType.SymbolicLink,
       target
     }
-    this.addNode(path, newLink)
+    this.createNode(path, newLink)
   }
 
+  deleteNode(path: string) {
+    const parentNode = this.getParentNode(path)
+    const nodeName = this.getNodeName(path)
+
+    if (!parentNode.children[nodeName]) {
+      throw new Error(`Deletion failed, path not found: ${path}`)
+    }
+    delete parentNode.children[nodeName]
+  }
+
+  moveNode(path: string, destinationPath: string) {
+    const nodeName = this.getNodeName(path)
+    const parentNode = this.getParentNode(path)
+
+    const node = parentNode.children[nodeName]
+    if (!node) {
+      throw new Error(`Moving failed, source not found: ${path}`)
+    }
+
+    const newName = this.getNodeName(destinationPath)
+    const newParent = this.getParentNode(destinationPath)
+
+    // remove previous object reference
+    delete parentNode.children[nodeName]
+    
+    // update name and move to new path
+    node.name = newName
+    newParent.children[newName] = node
+  }
+
+  changeNodeProperties(path: string, property: string) {
+    // TODO toggle the property
+  }
 }
 
 export default FileSystem
