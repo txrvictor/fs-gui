@@ -24,22 +24,7 @@ services:
       - fs-gui-network
     volumes:
       - ./server:/app
-    depends_on:
-      - mongo
-
-  mongo:
-    image: mongo:7.0.5-jammy
-    ports:
-      - "27017:27017"
-    networks:
-      - fs-gui-network
-    volumes:
-      - mongo-data:/data/db
 
 networks:
   fs-gui-network:
     driver: bridge
-
-volumes:
-  mongo-data:
-    driver: local
