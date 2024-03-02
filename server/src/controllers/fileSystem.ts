@@ -1,5 +1,6 @@
 import {
   NodeType,
+  AvailableProperties,
   BaseNode,
   FileNode,
   FolderNode,
@@ -183,8 +184,39 @@ class FileSystem {
     newParent.children[newName] = node
   }
 
+  private recursivePropertyChange(node: BaseNode, property: string, value: boolean) {
+    if (node.type === NodeType.File) {
+      const file = <FileNode>node
+      file.properties[property] = value
+    }
+
+    if (node.type === NodeType.Folder) {
+      const folder = <FolderNode>node
+      folder.properties[property] = value
+
+      // update children's property recursively
+      for (const [_, child] of Object.entries(folder.children)) {
+        this.recursivePropertyChange(child, property, value)
+      }
+    }
+  }
+
   toggleNodeProperties(path: string, property: string) {
-    // TODO toggle the property
+    if (!AvailableProperties.includes(property)) {
+       throw new Error(`Property does not exist: ${property}`)
+    }
+
+    const node = this.getNode(path)
+    if (!node) {
+      throw new Error(`Not found: ${path}`)
+    }
+
+    // ignore SymbolicLinks since it has no properties of its own
+    if (node.type === NodeType.File || node.type === NodeType.Folder) {
+      const fileOrFolder = <FileNode | FolderNode>node
+      const newValue = !fileOrFolder.properties[property]
+      this.recursivePropertyChange(node, property, newValue)
+    }
   }
 }
 

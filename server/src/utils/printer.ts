@@ -56,7 +56,7 @@ class SystemHierarchyPrinter {
         } catch (e) {
           // fallback to print the symbolic link name
           printTab(indent)
-          console.log(`*${displayName}[!]`)
+          console.log(`*${displayName}[!broken symlink]`)
         }
         break
   

@@ -5,10 +5,12 @@ export enum NodeType {
   SymbolicLink = "symbolicLink",
 }
 
-// minimal example for available properties
-export interface NodeProperties {
-  hide: boolean
-  executable: boolean
+// minimal example of available properties for simplicity
+export const AvailableProperties = ['hide', 'executable']
+type PropertyKeys = (typeof AvailableProperties)[number]
+
+export type NodeProperties = {
+  [key in PropertyKeys]: boolean
 }
 
 export interface BaseNode {
