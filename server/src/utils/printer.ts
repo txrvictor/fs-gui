@@ -46,13 +46,17 @@ class SystemHierarchyPrinter {
         const link = <SymbolicLinkNode>node
   
         try {
-          const realTarget = this.fs.getNode(link.target)
           const linkDisplayName = `*${link.name}`
-          this.printNodeHierarchy(realTarget, indent, linkDisplayName)
+          const realTarget = this.fs.getNode(link.target)
+          if (realTarget) {
+            this.printNodeHierarchy(realTarget, indent, linkDisplayName)
+          } else {
+            throw new Error(`Broken symlink: ${link.name} -> ${link.target}`)
+          }
         } catch (e) {
           // fallback to print the symbolic link name
           printTab(indent)
-          console.log(`* ${displayName}`)
+          console.log(`*${displayName}[!]`)
         }
         break
   
