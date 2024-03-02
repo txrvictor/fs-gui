@@ -115,6 +115,10 @@ class FileSystem {
     }
 
     const folder = (<FolderNode>parent)
+    if (folder.children[node.name] !== undefined) {
+      throw new Error(`Duplicated file name inside "${folder.name}" directory: ${node.name}`)
+    }
+
     folder.children[node.name] = node
   }
 
