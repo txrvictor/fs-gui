@@ -146,6 +146,9 @@ class FileSystem {
   }
 
   addSymbolicLink(path: string, target: string) {
+
+    // TODO verify symlink loop
+
     const newLink: SymbolicLinkNode = {
       name: '', // depends on path
       type: NodeType.SymbolicLink,
@@ -172,6 +175,8 @@ class FileSystem {
     if (!node) {
       throw new Error(`Moving failed, source not found: ${path}`)
     }
+
+    // TODO verify symlink loop
 
     const newParent = this.getNode(destinationPath)
     if (!newParent || newParent?.type !== NodeType.Folder) {
