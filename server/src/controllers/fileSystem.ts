@@ -173,15 +173,15 @@ class FileSystem {
       throw new Error(`Moving failed, source not found: ${path}`)
     }
 
-    const newName = this.getNodeName(destinationPath)
-    const newParent = this.getParentNode(destinationPath)
+    const newParent = this.getNode(destinationPath)
+    if (!newParent || newParent?.type !== NodeType.Folder) {
+      throw new Error(`Destination is not a folder or was not found: ${destinationPath}`)
+    }
+    const destFolder = <FolderNode>newParent
 
-    // remove previous object reference
+    // transfer object reference from old parent to new
     delete parentNode.children[nodeName]
-    
-    // update name and move to new path
-    node.name = newName
-    newParent.children[newName] = node
+    destFolder.children[nodeName] = node
   }
 
   private recursivePropertyChange(node: BaseNode, property: string, value: boolean) {
