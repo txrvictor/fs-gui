@@ -26,11 +26,10 @@ class FileSystem {
 
   getNode(path: string): BaseNode | null {
     let currentNode: BaseNode | null = this.root
-    const errors: Array<Error> = []
 
     // remove empty paths in case of duplicated/tailing slashes
     const parts = path.split('/').filter((part) => part !== '')
-    parts.forEach((nextPart) => {
+    for (const nextPart of parts) {
       switch (currentNode?.type) {
         case NodeType.Folder:
           currentNode = (<FolderNode>currentNode).children[nextPart] || null
@@ -41,13 +40,11 @@ class FileSystem {
 
           // handling symbolic link loops
           if (targetPath && path.includes(targetPath)) {
-            errors.push(new Error(
+            throw new Error(
               `Symbolic Link loop!
                Path: ${path}
-               Symbolic Link: ${currentNode.name} => ${targetPath}
-              `
-            ))
-            currentNode = null
+               Symbolic Link: ${currentNode.name} => ${targetPath}`
+            )
           }
 
           const targetNode = this.getNode(targetPath)
@@ -58,18 +55,14 @@ class FileSystem {
           }
           break
 
-        // handle when trying to open a file or invalid node type
         case NodeType.File:
-          errors.push(new Error(
+          throw new Error(
             `Trying to open a node (${nextPart}) from within a file: ${currentNode.name}`
-          ))
+          )
+
         default:
           currentNode = null
       }
-    })
-
-    if (errors.length > 0) {
-      throw new Error(errors.join('\n\n'))
     }
 
     // if final node is a symbolic link, replace it with the original
@@ -190,7 +183,7 @@ class FileSystem {
     newParent.children[newName] = node
   }
 
-  changeNodeProperties(path: string, property: string) {
+  toggleNodeProperties(path: string, property: string) {
     // TODO toggle the property
   }
 }
