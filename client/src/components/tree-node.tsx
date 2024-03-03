@@ -1,8 +1,9 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { SelectedNodeContext } from '../contexts'
+import { RootNodeContext, SelectedNodeContext } from '../contexts'
 import { NodeElement, NodeType } from '../api/types'
+import { findNodeByPath } from '../utils/node'
 
 import FolderIcon from '../assets/folder.svg'
 import FileIcon from '../assets/file.svg'
@@ -26,29 +27,48 @@ interface Props {
 }
 
 const TreeNode = (props: Props) => {
-  const {value, renderChildren} = props
-  const {name, type, children} = value
+  const {value: node, renderChildren} = props
 
+  const root = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
+
+  const [expanded, setExpanded] = useState<boolean>(false)
+  const [loadedChildren, setLoadedChildren] = useState<Array<NodeElement>>()
 
   const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
     evt.preventDefault()
     evt.stopPropagation()
 
-    setSelectedNode(value)
-  }, [])
+    // in case this is a symbolic link, we must refer to the original target node
+    // when displaying the info on the right side panel. If it fails, just show the symlink
+    let selectedNode = node
+    if (root && node.type === 'symbolicLink' && node.target) {
+      const foundNode = findNodeByPath(root, node.target)
+      if (foundNode) {
+        selectedNode = foundNode
+      }
+    }
+    setSelectedNode(selectedNode)
+
+    // load the children on state and toggle expand to render them
+    if (selectedNode?.children) {
+      setLoadedChildren(Object.entries(selectedNode.children).map((e) => e[1]))
+      setExpanded((prevState) => !prevState)
+    }
+  }, [root, node, setSelectedNode])
+
+  const displayedChildren = useMemo(() => loadedChildren?.map((child, i) => {
+    return renderChildren(child, i)
+  }), [loadedChildren, renderChildren])
 
   return (
     <Container>
       <NodeLabel onClick={onClick}>
-        <Icon src={renderIcon(type)} />
-        <p>{name}</p>
+        <Icon src={renderIcon(node.type)} />
+        <p>{node.name}</p>
       </NodeLabel>
 
-      {children !== undefined && Object.keys(children).map((key, i) => {
-        const child = children[key]
-        return renderChildren(child, i)
-      })}
+      {expanded && displayedChildren}
     </Container>
   )
 }
@@ -69,7 +89,6 @@ const NodeLabel = styled.div`
   &:hover {
     cursor: pointer;
     font-weight: bold;
-
     background-color: #FFFFFF;
   }
 `

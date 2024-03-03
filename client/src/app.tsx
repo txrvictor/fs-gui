@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { SelectedNodeContext } from './contexts'
+import { RootNodeContext, SelectedNodeContext } from './contexts'
 import { getRoot } from './api'
 import { NodeElement } from './api/types'
 
@@ -30,28 +30,30 @@ function App() {
   }, [loadRoot])
 
   return (
-    <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
-      <TitleContainer>
-        <h1>FS GUI</h1>
+    <RootNodeContext.Provider value={root}>
+      <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
+        <TitleContainer>
+          <h1>FS GUI</h1>
 
-        <ButtonsContainer>
-          <button onClick={() => {}}>
-            Save
-          </button>
-          <button onClick={loadRoot}>
-            Reload Root
-          </button>
-          <button onClick={() =>{}}>
-            Clean
-          </button>
-        </ButtonsContainer>
-      </TitleContainer>
+          <ButtonsContainer>
+            <button onClick={() => {}}>
+              Save
+            </button>
+            <button onClick={loadRoot}>
+              Reload Root
+            </button>
+            <button onClick={() =>{}}>
+              Clean
+            </button>
+          </ButtonsContainer>
+        </TitleContainer>
 
-      <Content>
-        <DirectoryTree root={root} />
-        <NodeInfo />
-      </Content>
-    </SelectedNodeContext.Provider>
+        <Content>
+          <DirectoryTree />
+          <NodeInfo />
+        </Content>
+      </SelectedNodeContext.Provider>
+    </RootNodeContext.Provider>
   )
 }
 

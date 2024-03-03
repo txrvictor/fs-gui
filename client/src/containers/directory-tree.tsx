@@ -1,7 +1,7 @@
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { SelectedNodeContext } from '../contexts'
+import { RootNodeContext, SelectedNodeContext } from '../contexts'
 import { NodeElement } from '../api/types'
 import Panel from '../components/panel'
 import TreeNode from '../components/tree-node'
@@ -14,25 +14,22 @@ const renderChildrenRecursively = (node: NodeElement, index = 0) => (
   />
 )
 
-interface Props {
-  root?: NodeElement
-}
-
-const DirectoryTree = (props: Props) => {
-  const {root} = props
-
+const DirectoryTree = () => {
+  const root = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
  
   const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
     evt.preventDefault()
     root && setSelectedNode(root)
-  }, [])
+  }, [root, setSelectedNode])
+
+  const rootChildren = useMemo(() => {
+    return Object.entries(root?.children || {}).map((e) => e[1])
+  }, [root])
 
   if (!root) {
     return null
   }
-
-  const rootChildren = Object.entries(root.children || {}).map((e) => e[1])
 
   return (
     <Container>

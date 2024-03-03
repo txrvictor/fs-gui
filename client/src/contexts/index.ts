@@ -10,3 +10,5 @@ export const SelectedNodeContext = createContext<ISelectedNodeContext>({
   selectedNode: undefined,
   setSelectedNode: () => {},
 })
+
+export const RootNodeContext = createContext<NodeElement | undefined>(undefined)
