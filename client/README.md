@@ -1,2 +1,2 @@
-# Client React Application
+# Client React Application for FS-GUI
 
