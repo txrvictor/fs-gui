@@ -1,7 +1,9 @@
 {
   "name": "server",
+  "description": "Mock file system server for fs-gui project",
+  "author": "Victor Teixeira",
+  "license": "MIT",
   "version": "1.0.0",
-  "description": "",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
@@ -10,9 +12,6 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "2.8.5",
     "express": "4.18.3",

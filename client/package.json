@@ -1,8 +1,12 @@
 {
   "name": "client",
+  "description": "Client for fs-gui project",
+  "author": "Victor Teixeira",
+  "license": "MIT",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "src/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
