@@ -24,7 +24,7 @@ class SystemHierarchyPrinter {
     this.fs = fs
   }
 
-  printNodeHierarchy(node: BaseNode | null, indent = 0, displayName = node?.name) {
+  printNodeHierarchy(node: BaseNode | null, indent = 0, displayName = node?.name, accPath = '') {
     if (!node) {
       return
     }
@@ -35,10 +35,13 @@ class SystemHierarchyPrinter {
         
         printTab(indent)
         console.log(`${displayName}/ ${getProperties(folder)}`)
+
+        // accumulate path to check loops later
+        accPath += node.id
   
         Object.keys(folder.children).forEach((child) => {
           // add indent for folder's children
-          this.printNodeHierarchy(folder.children[child], indent + 1)
+          this.printNodeHierarchy(folder.children[child], indent + 1, undefined, accPath)
         })
         break
   
@@ -49,14 +52,20 @@ class SystemHierarchyPrinter {
           const linkDisplayName = `*${link.name}`
           const realTarget = this.fs.getNode(link.target)
           if (realTarget) {
-            this.printNodeHierarchy(realTarget, indent, linkDisplayName)
+
+            // check for symlink loops
+            if (accPath.includes(realTarget.id)) {
+              throw new Error(`Symlink loop: ${link.name} -> ${link.target}`)
+            }
+
+            this.printNodeHierarchy(realTarget, indent, linkDisplayName, accPath)
           } else {
             throw new Error(`Broken symlink: ${link.name} -> ${link.target}`)
           }
-        } catch (e) {
+        } catch (e: any) {
           // fallback to print the symbolic link name
           printTab(indent)
-          console.log(`*${displayName}[!broken symlink]`)
+          console.log(`*${displayName}[!${e.message}]`)
         }
         break
   

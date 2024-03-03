@@ -5,7 +5,7 @@ import SystemHierarchyPrinter from '../utils/printer'
  * File can be executed to print an example to the terminal.
  * From the fs-gui/server folder run:
  * 
- * $ npx ts-node ./src/utils/example.ts
+ * $ npx ts-node ./src/examples/example.ts
  * 
  */
 function printExample() {
@@ -27,6 +27,10 @@ function printExample() {
     fileSystem.moveNode('b/b/m','a')
 
     fileSystem.toggleNodeProperties('b/b','hide')
+
+    fileSystem.addSymbolicLink('a/symbLinkToBB', 'b/b')
+    fileSystem.addSymbolicLink('b/b/symbLinkToA', 'a')
+
   } catch (e) {
     console.error(e)
   }

@@ -1,3 +1,4 @@
+import { v4 } from 'uuid'
 import {
   NodeType,
   AvailableProperties,
@@ -18,6 +19,7 @@ class FileSystem {
       this.root = initialRoot
     } else {
       this.root = {
+        id: v4(),
         name: '', // root
         type: NodeType.Folder,
         properties: {hide: false, executable: false},
@@ -120,6 +122,7 @@ class FileSystem {
 
   addFile(path: string) {
     const newFile: FileNode = {
+      id: v4(),
       name: '', // depends on path
       type: NodeType.File,
       properties: {hide: false, executable: false}
@@ -129,6 +132,7 @@ class FileSystem {
 
   addDirectory(path: string) {
     const newDirectory: FolderNode = {
+      id: v4(),
       name: '', // depends on path
       type: NodeType.Folder,
       properties: {hide: false, executable: false},
@@ -139,6 +143,7 @@ class FileSystem {
 
   addSymbolicLink(path: string, target: string) {
     const newLink: SymbolicLinkNode = {
+      id: v4(),
       name: '', // depends on path
       type: NodeType.SymbolicLink,
       target

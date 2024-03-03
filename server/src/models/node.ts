@@ -14,6 +14,7 @@ export type NodeProperties = {
 }
 
 export interface BaseNode {
+  id: string
   name: string
   type: NodeType
 }
