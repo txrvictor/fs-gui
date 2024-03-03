@@ -39,16 +39,6 @@ class FileSystem {
 
         case NodeType.SymbolicLink:          
           const targetPath = (<SymbolicLinkNode>currentNode).target
-
-          // handling symbolic link loops
-          if (targetPath && path.includes(targetPath)) {
-            throw new Error(
-              `Symbolic Link loop!
-               Path: ${path}
-               Symbolic Link: ${currentNode.name} => ${targetPath}`
-            )
-          }
-
           const targetNode = this.getNode(targetPath)
           if (targetNode?.type === NodeType.Folder) {
             currentNode = (<FolderNode>targetNode).children[nextPart] || null
@@ -118,47 +108,42 @@ class FileSystem {
   }
 
   private createNode(path: string, node: SystemNode) {
-    const parentNode = this.getParentNode(path)
+    const safePath = sanitizePath(path)
+    const parentNode = this.getParentNode(safePath)
 
     // make sure node has the same name as given in the path
-    const nodeNameFromPath = this.getNodeName(path)
+    const nodeNameFromPath = this.getNodeName(safePath)
     node.name = nodeNameFromPath
 
     this.linkNodeToParent(parentNode, node)
   }
 
   addFile(path: string) {
-    const safePath = sanitizePath(path)
     const newFile: FileNode = {
       name: '', // depends on path
       type: NodeType.File,
       properties: {hide: false, executable: false}
     }
-    this.createNode(safePath, newFile)
+    this.createNode(path, newFile)
   }
 
   addDirectory(path: string) {
-    const safePath = sanitizePath(path)
     const newDirectory: FolderNode = {
       name: '', // depends on path
       type: NodeType.Folder,
       properties: {hide: false, executable: false},
       children: {}
     }
-    this.createNode(safePath, newDirectory)
+    this.createNode(path, newDirectory)
   }
 
   addSymbolicLink(path: string, target: string) {
-    const safePath = sanitizePath(path)
-
-    // TODO verify symlink loop
-
     const newLink: SymbolicLinkNode = {
       name: '', // depends on path
       type: NodeType.SymbolicLink,
       target
     }
-    this.createNode(safePath, newLink)
+    this.createNode(path, newLink)
   }
 
   deleteNode(path: string) {
@@ -179,8 +164,6 @@ class FileSystem {
     if (!node) {
       throw new Error(`Moving failed, source not found: ${path}`)
     }
-
-    // TODO verify symlink loop
 
     const newParent = this.getNode(destinationPath)
     if (!newParent || newParent?.type !== NodeType.Folder) {
