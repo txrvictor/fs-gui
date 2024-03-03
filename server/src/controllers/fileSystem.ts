@@ -6,6 +6,7 @@ import {
   FolderNode,
   SymbolicLinkNode,
 } from '../models'
+import { sanitizePath } from '../utils/path'
 
 export type SystemNode = FileNode | FolderNode | SymbolicLinkNode
 
@@ -127,25 +128,28 @@ class FileSystem {
   }
 
   addFile(path: string) {
+    const safePath = sanitizePath(path)
     const newFile: FileNode = {
       name: '', // depends on path
       type: NodeType.File,
       properties: {hide: false, executable: false}
     }
-    this.createNode(path, newFile)
+    this.createNode(safePath, newFile)
   }
 
   addDirectory(path: string) {
+    const safePath = sanitizePath(path)
     const newDirectory: FolderNode = {
       name: '', // depends on path
       type: NodeType.Folder,
       properties: {hide: false, executable: false},
       children: {}
     }
-    this.createNode(path, newDirectory)
+    this.createNode(safePath, newDirectory)
   }
 
   addSymbolicLink(path: string, target: string) {
+    const safePath = sanitizePath(path)
 
     // TODO verify symlink loop
 
@@ -154,7 +158,7 @@ class FileSystem {
       type: NodeType.SymbolicLink,
       target
     }
-    this.createNode(path, newLink)
+    this.createNode(safePath, newLink)
   }
 
   deleteNode(path: string) {
