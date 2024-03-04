@@ -24,13 +24,13 @@ const NodeInfo = () => {
     <Container>
       <Header>
         {node && (
-          <Icon>
+          <HeaderIcon>
             <img 
               src={getNodeIcon(node.type)}
               // compensate different icon sizes
               style={{height: iconSize, width: iconSize}}
             />
-          </Icon>
+          </HeaderIcon>
         )}
         <Name>
           {node?.name || 'Main Directory'}
@@ -62,8 +62,19 @@ const NodeInfo = () => {
 
       {node?.type === 'symbolicLink' && (
         <>
-          <SectionLabel>Symbolic Link to:</SectionLabel>
+          <SectionLabel>Symbolic Link path</SectionLabel>
           <TargetLink>{node?.target || 'No target'}</TargetLink>
+        </>
+      )}
+
+      {node?.targetRef && (
+        <>
+          <SectionLabel>Refers to</SectionLabel>
+          <TargetRef>
+            <p>[{node.targetRef.type.toUpperCase()}]:</p>
+            <SmallIcon src={getNodeIcon(node.targetRef.type)} />
+            <p>{node.targetRef.name}</p>
+          </TargetRef>
         </>
       )}
     </Container>
@@ -84,7 +95,7 @@ const Header = styled.div`
   align-items: center;
 `
 
-const Icon = styled.div`
+const HeaderIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,4 +142,17 @@ const TargetLink = styled.div`
   border-radius: 4px;
   padding: 0.2em;
   overflow-x: auto;
+`
+const TargetRef = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.2em;
+  padding-left: 0.1em;
+`
+
+const SmallIcon = styled.img`
+  height: 1.2em;
+  margin-left: 0.6em;
+  margin-right: 0.3em;
 `
