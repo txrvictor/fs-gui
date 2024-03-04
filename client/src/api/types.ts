@@ -5,7 +5,6 @@ export interface NodeElement {
   id: string
   name: string
   type: NodeType
-  target?: string
   properties?: {
     hide: boolean
     executable: boolean
@@ -13,4 +12,8 @@ export interface NodeElement {
   children?: {
     [name: string]: NodeElement
   }
+  target?: string
+
+  // client side injected prop to ref target easily
+  targetRef?: NodeElement
 }

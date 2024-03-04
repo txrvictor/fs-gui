@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { RootNodeContext, SelectedNodeContext } from '../contexts'
@@ -31,32 +31,41 @@ const TreeNode = (props: Props) => {
   const root = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
 
-  const [expanded, setExpanded] = useState<boolean>(false)
+  // auto expand folders and only expand symlinks on click to prevent loop crash
+  const isFolder = node.type === 'folder'
+  const [expanded, setExpanded] = useState<boolean>(isFolder)
   const [loadedChildren, setLoadedChildren] = useState<Array<NodeElement>>()
+
+  const loadChildren = useCallback((node: NodeElement) => {
+    if (node.type === 'folder' && node.children) {
+      setLoadedChildren(Object.entries(node.children).map((e) => e[1]))
+    }
+  }, [])
+
+  useEffect(() => {
+    loadChildren(node)
+  }, [node, loadChildren])
 
   const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
     evt.preventDefault()
     evt.stopPropagation()
 
-    // in case this is a symbolic link, we must refer to the original target node
-    // when displaying the info on the right side panel. If it fails, just show the symlink
-    let selectedNode = node
+    setExpanded((prevState) => !prevState)
+
+    // in case this is a symlink, we can save a reference to the original
+    const selectedNode = node
     if (root && node.type === 'symbolicLink' && node.target) {
-      const foundNode = findNodeByPath(root, node.target)
-      if (foundNode) {
-        selectedNode = foundNode
+      const originalNode = findNodeByPath(root, node.target)
+      if (originalNode) {
+        selectedNode.targetRef = originalNode
+        loadChildren(originalNode)
       }
     }
     setSelectedNode(selectedNode)
+  }, [root, node, setSelectedNode, loadChildren])
 
-    // load the children on state and toggle expand to render them
-    if (selectedNode?.children) {
-      setLoadedChildren(Object.entries(selectedNode.children).map((e) => e[1]))
-      setExpanded((prevState) => !prevState)
-    }
-  }, [root, node, setSelectedNode])
-
-  const displayedChildren = useMemo(() => loadedChildren?.map((child) => (
+  // optimization to only re-render children if it changes
+  const childrenToRender = useMemo(() => loadedChildren?.map((child) => (
     <TreeNode key={child.id} value={child} />
   )), [loadedChildren])
 
@@ -67,7 +76,7 @@ const TreeNode = (props: Props) => {
         <p>{node.name}</p>
       </NodeLabel>
 
-      {expanded && displayedChildren}
+      {expanded && childrenToRender}
     </Container>
   )
 }
