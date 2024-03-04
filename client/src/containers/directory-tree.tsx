@@ -7,7 +7,7 @@ import TreeNode from '../components/tree-node'
 
 const DirectoryTree = () => {
   const {root} = useContext(RootNodeContext)
-  const {setSelectedNode} = useContext(SelectedNodeContext)
+  const {selectedNode, setSelectedNode} = useContext(SelectedNodeContext)
  
   const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
     evt.preventDefault()
@@ -25,7 +25,7 @@ const DirectoryTree = () => {
   return (
     <Container>
       {/* render the root directory as a fixed element */}
-      <RootLabel onClick={onClick}>
+      <RootLabel onClick={onClick} $isSelected={root.id === selectedNode?.id}>
         <p>Main Directory</p>
       </RootLabel>
 
@@ -45,9 +45,11 @@ const Container = styled(Panel)`
   overflow: auto;
 `
 
-const RootLabel = styled.div`
+const RootLabel = styled.div<{$isSelected: boolean}>`
   font-size: 1.5em;
   font-style: italic;
+  color: ${props => (props.$isSelected ? `#E1205C` : `initial`)};
+  font-weight: ${props => (props.$isSelected ? `bold` : `initial`)};
   margin-bottom: 6px;
 
   :hover {

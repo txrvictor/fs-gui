@@ -20,7 +20,7 @@ const TreeNode = (props: Props) => {
   const {value: node} = props
 
   const {root} = useContext(RootNodeContext)
-  const {setSelectedNode} = useContext(SelectedNodeContext)
+  const {selectedNode, setSelectedNode} = useContext(SelectedNodeContext)
 
   // auto expand folders and only expand symlinks on click to prevent loop crash
   const isFolder = node.type === 'folder'
@@ -64,6 +64,7 @@ const TreeNode = (props: Props) => {
     <Container>
       <NodeLabel
         $isSymlink={node.type === 'symbolicLink'}
+        $isSelected={node.id === selectedNode?.id}
         onClick={onClick}
       >
         <Icon src={getNodeIcon(node.type)} />
@@ -84,11 +85,16 @@ const Container = styled.div`
   border-left: 1px dashed #C6C6C6;
 `
 
-const NodeLabel = styled.div<{$isSymlink: boolean}>`
+const NodeLabel = styled.div<{
+  $isSymlink: boolean,
+  $isSelected: boolean,
+}>`
   font-size: 1.3em;
   display: flex;
   align-items: center;
   background-color: ${props => (props.$isSymlink ? `#BADCF030` : `transparent`)};
+  color: ${props => (props.$isSelected ? `#E1205C` : `initial`)};
+  font-weight: ${props => (props.$isSelected ? `bold` : `initial`)};
   
   &:hover {
     cursor: pointer;

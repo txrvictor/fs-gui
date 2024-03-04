@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import styled from 'styled-components'
 
 import { SelectedNodeContext } from '../contexts'
+import PathDisplay from '../components/path-display'
 import { getNodeIcon } from '../utils/node'
 
 const TargetPanel = () => {
@@ -14,7 +15,9 @@ const TargetPanel = () => {
   return (
     <>
       <SectionLabel>Symbolic Link path</SectionLabel>
-      <TargetLink>{node?.target || 'No target'}</TargetLink>
+      <PathDisplay style={{marginTop: '0.1em'}}>
+        {node?.target || 'No target'}
+      </PathDisplay>
 
       {node?.targetRef && (
         <>
@@ -39,18 +42,6 @@ const SectionLabel = styled.p`
   text-align: left;
 `
 
-const TargetLink = styled.div`
-  margin-top: 0.1em;
-  font-family: 'Roboto Mono', 'Courier New', monospace;
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #E1205C;
-  background-color: #F6F6F6;
-  border: 2px solid #DADADA;
-  border-radius: 4px;
-  padding: 0.2em;
-  overflow-x: auto;
-`
 const TargetRef = styled.div`
   display: flex;
   align-items: center;

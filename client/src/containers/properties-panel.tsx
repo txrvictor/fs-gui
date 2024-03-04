@@ -31,14 +31,8 @@ const PropertiesPanel = () => {
         // fallback if it fails
         setSelectedNode(updatedRoot)
       }
-
-      // TODO show success toast
-
     } catch (err) {
       console.error(err)
-
-      // TODO show fail toast
-
     }
   }, [node, setRoot, setSelectedNode])
 

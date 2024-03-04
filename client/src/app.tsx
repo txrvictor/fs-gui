@@ -36,6 +36,11 @@ function App() {
     loadRoot()
   }, [loadRoot])
 
+  useEffect(() => {
+    // reset action when selected node change
+    setAction(undefined)
+  }, [selectedNode])
+
   return (
     <RootNodeContext.Provider value={{root, setRoot}}>
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>

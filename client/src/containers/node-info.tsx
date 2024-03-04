@@ -44,7 +44,7 @@ const NodeInfo = () => {
 export default NodeInfo
 
 const Container = styled(Panel)`
-  height: 400px;
+  height: 320px;
   overflow: auto;
   display: flex;
   flex-direction: column;
