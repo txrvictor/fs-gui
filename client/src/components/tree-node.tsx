@@ -23,11 +23,10 @@ const renderIcon = (type: NodeType) => {
 
 interface Props {
   value: NodeElement
-  renderChildren: (node: NodeElement, index?: number) => React.ReactNode
 }
 
 const TreeNode = (props: Props) => {
-  const {value: node, renderChildren} = props
+  const {value: node} = props
 
   const root = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
@@ -57,9 +56,9 @@ const TreeNode = (props: Props) => {
     }
   }, [root, node, setSelectedNode])
 
-  const displayedChildren = useMemo(() => loadedChildren?.map((child, i) => {
-    return renderChildren(child, i)
-  }), [loadedChildren, renderChildren])
+  const displayedChildren = useMemo(() => loadedChildren?.map((child) => (
+    <TreeNode key={child.id} value={child} />
+  )), [loadedChildren])
 
   return (
     <Container>

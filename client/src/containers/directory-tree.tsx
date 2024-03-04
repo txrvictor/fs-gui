@@ -2,17 +2,8 @@ import { useCallback, useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { RootNodeContext, SelectedNodeContext } from '../contexts'
-import { NodeElement } from '../api/types'
 import Panel from '../components/panel'
 import TreeNode from '../components/tree-node'
-
-const renderChildrenRecursively = (node: NodeElement, index = 0) => (
-  <TreeNode
-    key={`${node.name}_${index}`}
-    value={node}
-    renderChildren={renderChildrenRecursively}
-  />
-)
 
 const DirectoryTree = () => {
   const root = useContext(RootNodeContext)
@@ -39,7 +30,7 @@ const DirectoryTree = () => {
       </RootLabel>
 
       <RootChildren>
-        {rootChildren.map((child) => renderChildrenRecursively(child))}
+        {rootChildren.map((child) => <TreeNode key={child.id} value={child} />)}
       </RootChildren>
     </Container>
   )
