@@ -26,11 +26,10 @@ function printExample() {
 
     fileSystem.moveNode('b/b/m','a')
 
-    fileSystem.toggleNodeProperties('b/b','hide')
+    fileSystem.toggleNodeProperties('b/b','hidden')
 
     fileSystem.addSymbolicLink('a/symbLinkToBB', 'b/b')
     fileSystem.addSymbolicLink('b/b/symbLinkToA', 'a')
-
   } catch (e) {
     console.error(e)
   }

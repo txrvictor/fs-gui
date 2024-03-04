@@ -11,7 +11,7 @@ test('Should create a folder in root directory', () => {
   expect(folder.name).toBe('folder')
   expect(folder.type).toBe(NodeType.Folder)
   expect(folder.children).toEqual({})
-  expect(folder.properties['hide']).toBe(false)
+  expect(folder.properties['hidden']).toBe(false)
   expect(folder.properties['executable']).toBe(false)
 })
 
@@ -35,7 +35,7 @@ test('Should create a file in root directory', () => {
   expect(file).toBeDefined()
   expect(file.name).toBe('file')
   expect(file.type).toBe(NodeType.File)
-  expect(file.properties['hide']).toBe(false)
+  expect(file.properties['hidden']).toBe(false)
   expect(file.properties['executable']).toBe(false)
 })
 
@@ -103,7 +103,7 @@ test('Should get a file', () => {
   expect(file).toBeDefined()
   expect(file.name).toBe('file')
   expect(file.type).toBe(NodeType.File)
-  expect(file.properties['hide']).toBe(false)
+  expect(file.properties['hidden']).toBe(false)
   expect(file.properties['executable']).toBe(false)
 })
 
@@ -117,7 +117,7 @@ test('Should get a folder', () => {
   expect(folder2.name).toBe('folder2')
   expect(folder2.type).toBe(NodeType.Folder)
   expect(folder2.children).toEqual({})
-  expect(folder2.properties['hide']).toBe(false)
+  expect(folder2.properties['hidden']).toBe(false)
   expect(folder2.properties['executable']).toBe(false)
 })
 
@@ -252,19 +252,19 @@ test('Should change properties of a file', () => {
   const file = <FileNode>folder.children['file']
 
   expect(file).toBeDefined()
-  expect(file.properties['hide']).toBe(false)
+  expect(file.properties['hidden']).toBe(false)
   expect(file.properties['executable']).toBe(false)
 
-  fs.toggleNodeProperties('folder/file', 'hide')
-  expect(file.properties['hide']).toBe(true)
+  fs.toggleNodeProperties('folder/file', 'hidden')
+  expect(file.properties['hidden']).toBe(true)
   expect(file.properties['executable']).toBe(false)
 
   fs.toggleNodeProperties('folder/file', 'executable')
-  expect(file.properties['hide']).toBe(true)
+  expect(file.properties['hidden']).toBe(true)
   expect(file.properties['executable']).toBe(true)
 
-  fs.toggleNodeProperties('folder/file', 'hide')
-  expect(file.properties['hide']).toBe(false)
+  fs.toggleNodeProperties('folder/file', 'hidden')
+  expect(file.properties['hidden']).toBe(false)
   expect(file.properties['executable']).toBe(true)
 
   expect(() => fs.toggleNodeProperties('folder/file', 'doNotExist')).toThrow(Error)
@@ -280,26 +280,26 @@ test('Should change properties of a folder and its children', () => {
   const fileA = <FileNode>folder.children['fileA']
   const fileB = <FileNode>folder.children['fileB']
 
-  expect(folder.properties['hide']).toBe(false)
+  expect(folder.properties['hidden']).toBe(false)
   expect(folder.properties['executable']).toBe(false)
-  expect(fileA.properties['hide']).toBe(false)
+  expect(fileA.properties['hidden']).toBe(false)
   expect(fileA.properties['executable']).toBe(false)
-  expect(fileB.properties['hide']).toBe(false)
+  expect(fileB.properties['hidden']).toBe(false)
   expect(fileB.properties['executable']).toBe(false)
 
   fs.toggleNodeProperties('folder', 'executable')
-  expect(folder.properties['hide']).toBe(false)
+  expect(folder.properties['hidden']).toBe(false)
   expect(folder.properties['executable']).toBe(true)
-  expect(fileA.properties['hide']).toBe(false)
+  expect(fileA.properties['hidden']).toBe(false)
   expect(fileA.properties['executable']).toBe(true)
-  expect(fileB.properties['hide']).toBe(false)
+  expect(fileB.properties['hidden']).toBe(false)
   expect(fileB.properties['executable']).toBe(true)
 
-  fs.toggleNodeProperties('folder', 'hide')
-  expect(folder.properties['hide']).toBe(true)
+  fs.toggleNodeProperties('folder', 'hidden')
+  expect(folder.properties['hidden']).toBe(true)
   expect(folder.properties['executable']).toBe(true)
-  expect(fileA.properties['hide']).toBe(true)
+  expect(fileA.properties['hidden']).toBe(true)
   expect(fileA.properties['executable']).toBe(true)
-  expect(fileB.properties['hide']).toBe(true)
+  expect(fileB.properties['hidden']).toBe(true)
   expect(fileB.properties['executable']).toBe(true)
 })

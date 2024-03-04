@@ -22,7 +22,11 @@ class FileSystem {
         id: v4(),
         name: '', // root
         type: NodeType.Folder,
-        properties: {hide: false, executable: false},
+        properties: {
+          hidden: false,
+          executable: false,
+          readOnly: false,
+        },
         children: {}
       }
     }
@@ -125,7 +129,11 @@ class FileSystem {
       id: v4(),
       name: '', // depends on path
       type: NodeType.File,
-      properties: {hide: false, executable: false}
+      properties: {
+        hidden: false,
+        executable: false,
+        readOnly: false,
+      }
     }
     this.createNode(path, newFile)
   }
@@ -135,7 +143,11 @@ class FileSystem {
       id: v4(),
       name: '', // depends on path
       type: NodeType.Folder,
-      properties: {hide: false, executable: false},
+      properties: {
+        hidden: false,
+        executable: false,
+        readOnly: false,
+      },
       children: {}
     }
     this.createNode(path, newDirectory)

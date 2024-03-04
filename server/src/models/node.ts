@@ -6,7 +6,7 @@ export enum NodeType {
 }
 
 // minimal example of available properties for simplicity
-export const AvailableProperties = ['hide', 'executable']
+export const AvailableProperties = ['hidden', 'executable', 'readOnly']
 type PropertyKeys = (typeof AvailableProperties)[number]
 
 export type NodeProperties = {
