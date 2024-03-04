@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { RootNodeContext, SelectedNodeContext } from '../contexts'
@@ -19,6 +19,13 @@ const renderIcon = (type: NodeType) => {
     default:
       return FileIcon
   }
+}
+
+const renderSymLinkIcon = (node: NodeElement): ReactNode => {
+  if (node.type === 'symbolicLink' && node.targetRef) {
+    return (<Icon src={renderIcon(node.targetRef.type)} />)
+  }
+  return null
 }
 
 interface Props {
@@ -71,9 +78,13 @@ const TreeNode = (props: Props) => {
 
   return (
     <Container>
-      <NodeLabel onClick={onClick}>
+      <NodeLabel
+        isSymlink={node.type === 'symbolicLink'}
+        onClick={onClick}
+      >
         <Icon src={renderIcon(node.type)} />
-        <p>{node.name}</p>
+        {renderSymLinkIcon(node)}
+        <p>{node.name}{isFolder && ' /'}</p>
       </NodeLabel>
 
       {expanded && childrenToRender}
@@ -89,10 +100,11 @@ const Container = styled.div`
   border-left: 1px dashed #C6C6C6;
 `
 
-const NodeLabel = styled.div`
+const NodeLabel = styled.div<{isSymlink: boolean}>`
   font-size: 1.3em;
   display: flex;
   align-items: center;
+  background-color: ${props => (props.isSymlink ? `#BADCF030` : `transparent`)};
   
   &:hover {
     cursor: pointer;
