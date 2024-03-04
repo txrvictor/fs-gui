@@ -7,7 +7,7 @@ import {
   FolderNode,
   SymbolicLinkNode,
 } from '../models'
-import { sanitizePath } from '../utils/path'
+import { sanitizePath, trimSlashes } from '../utils/path'
 
 export type SystemNode = FileNode | FolderNode | SymbolicLinkNode
 
@@ -21,6 +21,7 @@ class FileSystem {
       this.root = {
         id: v4(),
         name: '', // root
+        fullPath: '',
         type: NodeType.Folder,
         properties: {
           hidden: false,
@@ -118,8 +119,11 @@ class FileSystem {
     const parentNode = this.getParentNode(safePath)
 
     // make sure node has the same name as given in the path
+    // save a reference to the full path of the node to facilitate
+    // future operations
     const nodeNameFromPath = this.getNodeName(safePath)
     node.name = nodeNameFromPath
+    node.fullPath = safePath
 
     this.linkNodeToParent(parentNode, node)
   }
@@ -128,6 +132,7 @@ class FileSystem {
     const newFile: FileNode = {
       id: v4(),
       name: '', // depends on path
+      fullPath: '', // will be set later
       type: NodeType.File,
       properties: {
         hidden: false,
@@ -142,6 +147,7 @@ class FileSystem {
     const newDirectory: FolderNode = {
       id: v4(),
       name: '', // depends on path
+      fullPath: '', // will be set later
       type: NodeType.Folder,
       properties: {
         hidden: false,
@@ -157,6 +163,7 @@ class FileSystem {
     const newLink: SymbolicLinkNode = {
       id: v4(),
       name: '', // depends on path
+      fullPath: '', // will be set later
       type: NodeType.SymbolicLink,
       target
     }
@@ -188,8 +195,11 @@ class FileSystem {
     }
     const destFolder = <FolderNode>newParent
 
-    // transfer object reference from old parent to new
+    // make sure to remove the reference form old parent
     delete parentNode.children[nodeName]
+
+    // update path and transfer to new parent
+    node.fullPath = `${trimSlashes(destinationPath)}/${trimSlashes(nodeName)}`
     destFolder.children[nodeName] = node
   }
 

@@ -17,4 +17,5 @@ export interface BaseNode {
   id: string
   name: string
   type: NodeType
+  fullPath: string
 }
