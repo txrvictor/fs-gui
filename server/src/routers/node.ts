@@ -107,7 +107,7 @@ router.post('/node/change', changeValidationRules, (req: Request, res: Response)
 })
 
 const deleteValidationRules = [
-  query('path').notEmpty().withMessage('Node path is required'),
+  body('path').notEmpty().withMessage('Node path is required'),
 ]
 
 router.delete('/node', deleteValidationRules, (req: Request, res: Response) => {
@@ -116,7 +116,7 @@ router.delete('/node', deleteValidationRules, (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() })
   }
 
-  const nodePath = <string>req.query.path
+  const nodePath = <string>req.body.path
   try {
     system.deleteNode(nodePath)
     res.send(system.root)

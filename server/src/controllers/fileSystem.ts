@@ -115,7 +115,7 @@ class FileSystem {
   }
 
   private createNode(path: string, node: SystemNode) {
-    const safePath = sanitizePath(path)
+    const safePath = trimSlashes(sanitizePath(path))
     const parentNode = this.getParentNode(safePath)
 
     // make sure node has the same name as given in the path

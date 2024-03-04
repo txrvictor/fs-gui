@@ -38,11 +38,9 @@ const CustomInput = styled.input`
   width: 100%;
   box-sizing: border-box;
   font-size: 1.1em;
-  padding: 12px 20px;
-  margin: 8px 0;
-  background: #FFFFFF;
   border: 1px solid #D8E2DC;
   border-radius: 4px;
+  padding: 12px 20px;
 
   ::placeholder {
     color: #B2B2B2;

@@ -18,7 +18,7 @@ const AddLinkForm = () => {
 
   const {setAction} = useContext(ActionContext)
   const {flatRoot, setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node} = useContext(SelectedNodeContext)
+  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
@@ -52,6 +52,7 @@ const AddLinkForm = () => {
     try {
       const updatedRoot = await addLink(path, targetPath)
       setRoot(updatedRoot)
+      setSelectedNode(updatedRoot)
       setAction(undefined)
     } catch (err: any) {
       console.log({err})
@@ -64,34 +65,36 @@ const AddLinkForm = () => {
 
   return (
     <>
-      <PathDisplay style={{
-        marginTop: '0.2em',
-        marginBottom: '1em',
-      }}>
-        {`${node?.fullPath}/<input>`}
-      </PathDisplay>
+      <div>
+        <PathDisplay style={{
+          marginTop: '0.2em',
+          marginBottom: '1em',
+        }}>
+          {`${node?.fullPath}/<input>`}
+        </PathDisplay>
 
-      <Label>
-        Input the name of the symlink to be created in the above path:
-      </Label>
-      
-      <Input
-        ref={ref}
-        placeholder='Name'
-        value={name}
-        onChange={setName}
-        onEnter={onRequest}
-      />
+        <Label>
+          Input the name of the symlink to be created in the above path:
+        </Label>
+        
+        <Input
+          ref={ref}
+          placeholder='Name'
+          value={name}
+          onChange={setName}
+          onEnter={onRequest}
+        />
 
-      <Label>
-        Select the target element:
-      </Label>
+        <Label>
+          Select the target element:
+        </Label>
 
-      <SearchSelector
-        options={options}
-        value={target}
-        onChange={selectOption}
-      />
+        <SearchSelector
+          options={options}
+          value={target}
+          onChange={selectOption}
+        />
+      </div>
 
       <ButtonWrapper>
         <Button onClick={onRequest} disabled={disableButton}>
@@ -110,7 +113,8 @@ const Label = styled.p`
   font-size: 1.1em;
   font-style: italic;
   text-align: left;
-  margin-top: 0.6em;
+  margin-top: 0.8em;
+  margin-bottom: 0.2em;
 `
 
 const ButtonWrapper = styled.div`

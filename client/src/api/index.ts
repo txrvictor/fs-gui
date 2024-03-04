@@ -36,14 +36,14 @@ export const toggleNodeProperties = (path: string, property: string) => {
 }
 
 export const moveNode = (path: string, destinationNode: string) => {
-  return api.post<NodeElement>(`/node/change`, {
+  return api.post<NodeElement>(`/node/move`, {
     path,
     destination: destinationNode,
   }).then((response) => response.data)
 }
 
 export const deleteNode = (path: string) => {
-  return api.post<NodeElement>(`/node/change`, {
-    path,
+  return api.delete<NodeElement>(`/node`, {
+    data: {path},
   }).then((response) => response.data)
 }

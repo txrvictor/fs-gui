@@ -8,6 +8,7 @@ import IconButton from '../components/icon-button'
 import CloseIcon from '../assets/close.svg'
 import AddNodeForm from './add-node-form'
 import AddLinkForm from './add-link-form'
+import DeleteNodeForm from './delete-node-form'
 
 const renderForm = (action: ActionType) => {
     switch (action) {
@@ -18,8 +19,8 @@ const renderForm = (action: ActionType) => {
         return <AddLinkForm />
       // case 'move':
       //   return <AddMoveForm />
-      // case 'delete':
-      //   return <AddDeleteForm />
+      case 'delete':
+        return <DeleteNodeForm />
       default:
         return null
     }
@@ -54,6 +55,9 @@ const Container = styled(Panel)`
   position: relative;
   margin-top: 24px;
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const Close = styled.div`

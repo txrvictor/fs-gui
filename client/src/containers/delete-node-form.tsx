@@ -1,22 +1,12 @@
-import { useState, useContext, useRef, useEffect } from 'react'
+import { useState, useContext, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
-import { addFile, addFolder } from '../api'
+import { deleteNode } from '../api'
 import PathDisplay from '../components/path-display'
-import Input from '../components/input'
 import Button from '../components/button'
 
-interface Props {
-  type: 'add-file' | 'add-folder'
-}
-
-const AddNodeForm = (props: Props) => {
-  const {type} = props
-
-  const ref = useRef<HTMLInputElement>(null)
-
-  const [name, setName] = useState<string>('')
+const DeleteNodeForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
@@ -24,23 +14,17 @@ const AddNodeForm = (props: Props) => {
   const {setRoot} = useContext(RootNodeContext)
   const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
 
-  // auto focus on input
-  useEffect(() => ref?.current?.focus(), [type])
-
   const onRequest = async () => {
     setError(undefined)
 
-    const nodeName = name?.trim()
-    if (!node || !nodeName || nodeName.length === 0) {
+    if (!node) {
       return
     }
 
-    const path = `${node.fullPath}/${nodeName}`
-
+    const path = node.fullPath
     setIsLoading(true)
     try {
-      const method = type === 'add-file' ? addFile : addFolder
-      const updatedRoot = await method(path)
+      const updatedRoot = await deleteNode(path)
       setRoot(updatedRoot)
       setSelectedNode(updatedRoot)
       setAction(undefined)
@@ -51,7 +35,17 @@ const AddNodeForm = (props: Props) => {
     setIsLoading(false)
   }
 
-  const disableButton = name?.trim()?.length === 0 || isLoading
+  const description = useMemo(() => {
+    switch (node?.type) {
+      case 'folder':
+        return 'folder'
+      case 'symbolicLink': 
+        return 'Symbolic Link'
+      default:
+      case 'file': 
+        return 'file'
+    }
+  }, [node?.type])
 
   return (
     <>
@@ -60,26 +54,18 @@ const AddNodeForm = (props: Props) => {
           marginTop: '0.2em',
           marginBottom: '1em',
         }}>
-          {`${node?.fullPath}/<input>`}
+          {node?.fullPath || '/'}
         </PathDisplay>
 
         <Label>
-          Input the name of the <b>{type === 'add-file' ? 'file' : 'folder'}</b> to be created in the above path:
+          {`Are you sure you want to delete this ${description}?`}
         </Label>
-        
-        <Input
-          ref={ref}
-          placeholder='Name'
-          value={name}
-          onChange={setName}
-          onEnter={onRequest}
-        />
       </div>
-
+      
       <ButtonWrapper>
-        <Button onClick={onRequest} disabled={disableButton}>
-          Create
-        </Button>
+        <CustomButton onClick={onRequest} disabled={isLoading}>
+          Delete
+        </CustomButton>
       </ButtonWrapper>
 
       {error !== undefined && <Error>{error}</Error>}
@@ -87,7 +73,7 @@ const AddNodeForm = (props: Props) => {
   )
 }
 
-export default AddNodeForm
+export default DeleteNodeForm
 
 const Label = styled.p`
   font-size: 1.1em;
@@ -101,6 +87,14 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 0.6em;
+`
+
+const CustomButton = styled(Button)`
+  background-color: #FEC5BB;
+
+  &:hover {
+    border-color: #CC9389;
+  }
 `
 
 const Error = styled.div`

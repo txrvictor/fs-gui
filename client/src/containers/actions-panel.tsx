@@ -15,7 +15,7 @@ const ActionsPanel = () => {
   const {action, setAction} = useContext(ActionContext)
 
   const isFolder = node?.type === 'folder'
-  const isRoot = node?.name === '' && node?.target === ''
+  const isRoot = node?.name === '' && node?.fullPath === ''
 
   return (
     <>
