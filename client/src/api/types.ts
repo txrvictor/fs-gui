@@ -5,6 +5,7 @@ export interface NodeElement {
   id: string
   name: string
   type: NodeType
+  fullPath: string
   properties?: {
     [key: string]: boolean
   }

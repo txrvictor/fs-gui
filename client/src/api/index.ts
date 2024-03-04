@@ -8,3 +8,10 @@ const api = axios.create({
 export const getRoot = () => {
   return api.get<NodeElement>(`/root`).then((response) => response.data)
 }
+
+export const toggleNodeProperties = (nodePath: string, property: string) => {
+  return api.post<NodeElement>(`/node/change`, {
+    path: nodePath,
+    property,
+  }).then((response) => response.data)
+}

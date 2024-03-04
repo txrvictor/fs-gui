@@ -30,7 +30,7 @@ function App() {
   }, [loadRoot])
 
   return (
-    <RootNodeContext.Provider value={root}>
+    <RootNodeContext.Provider value={{root, setRoot}}>
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
         <TitleContainer>
           <h1>FS GUI</h1>

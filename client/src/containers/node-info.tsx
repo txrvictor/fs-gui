@@ -1,22 +1,47 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MouseEventHandler, useCallback, useContext } from 'react'
+import { ChangeEventHandler, useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
-import { SelectedNodeContext } from '../contexts'
+import { RootNodeContext, SelectedNodeContext } from '../contexts'
+import { toggleNodeProperties } from '../api'
 import Panel from '../components/panel'
-import { getNodeIcon } from '../utils/node'
 import Checkbox from '../components/checkbox'
+import { getNodeIcon, findNodeByPath } from '../utils/node'
 
 const NodeInfo = () => {
-  const {selectedNode: node} = useContext(SelectedNodeContext)
+  const {setRoot} = useContext(RootNodeContext)
+  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
 
-  const onPropertyChange: MouseEventHandler<HTMLInputElement> = useCallback((evt: any) => {
+  const onPropertyChange: ChangeEventHandler<HTMLInputElement> = useCallback(async (evt: any) => {
+    if (!node) {
+      return
+    }
     const key: string = evt.target.name
-    const value: boolean = evt.target.checked
 
-    // TODO call change property
-    console.log({key, value})
-  }, [])
+    // handle root element
+    const fullPath = node.fullPath === '' ? '/' : node.fullPath
+    try {
+      const updatedRoot = await toggleNodeProperties(fullPath, key)
+      setRoot(updatedRoot)
+
+      // re-select node based on updated root
+      const newSelectedNode = findNodeByPath(updatedRoot, node.fullPath)
+      if (newSelectedNode) {
+        setSelectedNode(newSelectedNode)
+      } else {
+        // fallback if it fails
+        setSelectedNode(updatedRoot)
+      }
+
+      // TODO show success toast
+
+    } catch (err) {
+      console.error(err)
+
+      // TODO show fail toast
+
+    }
+  }, [node, setRoot, setSelectedNode])
 
   const iconSize = node?.type === 'file' ? 32 : 36
 
@@ -51,8 +76,9 @@ const NodeInfo = () => {
                     key={key}
                     name={key}
                     label={key}
-                    defaultChecked={value}
-                    onClick={onPropertyChange}
+                    // defaultChecked={value}
+                    checked={value}
+                    onChange={onPropertyChange}
                   />
                 )
               })}
@@ -71,7 +97,7 @@ const NodeInfo = () => {
         <>
           <SectionLabel>Refers to</SectionLabel>
           <TargetRef>
-            <p>[{node.targetRef.type.toUpperCase()}]:</p>
+            <p><b>[{node.targetRef.type.toUpperCase()}]:</b></p>
             <SmallIcon src={getNodeIcon(node.targetRef.type)} />
             <p>{node.targetRef.name}</p>
           </TargetRef>

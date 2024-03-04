@@ -6,7 +6,7 @@ import Panel from '../components/panel'
 import TreeNode from '../components/tree-node'
 
 const DirectoryTree = () => {
-  const root = useContext(RootNodeContext)
+  const {root} = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
  
   const onClick: React.MouseEventHandler<HTMLDivElement> = useCallback((evt) => {

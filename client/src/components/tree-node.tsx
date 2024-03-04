@@ -19,7 +19,7 @@ interface Props {
 const TreeNode = (props: Props) => {
   const {value: node} = props
 
-  const root = useContext(RootNodeContext)
+  const {root} = useContext(RootNodeContext)
   const {setSelectedNode} = useContext(SelectedNodeContext)
 
   // auto expand folders and only expand symlinks on click to prevent loop crash
