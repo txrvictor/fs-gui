@@ -14,11 +14,13 @@ export const SelectedNodeContext = createContext<ISelectedNodeContext>({
 interface IRootNodeContext {
   root: NodeElement | undefined
   setRoot: (newRoot: NodeElement) => void
+  flatRoot: Array<NodeElement>
 }
 
 export const RootNodeContext = createContext<IRootNodeContext>({
   root: undefined,
   setRoot: () => {},
+  flatRoot: [],
 })
 
 export type ActionType = 'add-file' | 'add-folder' | 'add-link' | 'move' | 'delete'

@@ -1,46 +1,56 @@
-import { useState, useContext, useRef, useEffect } from 'react'
+import { useState, useContext, useRef, useEffect, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
-import { addFile, addFolder } from '../api'
+import { addLink } from '../api'
 import PathDisplay from '../components/path-display'
 import Input from '../components/input'
+import SearchSelector from '../components/search-selector'
 import Button from '../components/button'
 
-interface Props {
-  type: 'add-file' | 'add-folder'
+interface TargetOption {
+  value: string
+  label: string
 }
 
-const AddNodeForm = (props: Props) => {
-  const {type} = props
-
+const AddLinkForm = () => {
   const ref = useRef<HTMLInputElement>(null)
 
-  const [name, setName] = useState<string>('')
+  const {setAction} = useContext(ActionContext)
+  const {flatRoot, setRoot} = useContext(RootNodeContext)
+  const {selectedNode: node} = useContext(SelectedNodeContext)
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
-  const {setAction} = useContext(ActionContext)
-  const {setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node} = useContext(SelectedNodeContext)
+  const [name, setName] = useState<string>('')
+  const [target, setTarget] = useState<TargetOption>()
+
+  const options: Array<TargetOption> = useMemo(() => {
+    // filter out symlinks and the root folder
+    return flatRoot
+      .filter((n) => n.type !== 'symbolicLink' && n.fullPath !== '')
+      .map((n) => ({value: n.fullPath, label: n.fullPath}))
+  }, [flatRoot])
+  const selectOption = useCallback((e: any) => setTarget(e), [])
 
   // auto focus on input
-  useEffect(() => ref?.current?.focus(), [type])
+  useEffect(() => ref?.current?.focus(), [])
 
   const onRequest = async () => {
     setError(undefined)
 
     const nodeName = name?.trim()
-    if (!node || !nodeName || nodeName.length === 0) {
+    if (!node || !nodeName || nodeName.length === 0 || !target) {
       return
     }
 
     const path = `${node.fullPath}/${nodeName}`
+    const targetPath = target.value
 
     setIsLoading(true)
     try {
-      const method = type === 'add-file' ? addFile : addFolder
-      const updatedRoot = await method(path)
+      const updatedRoot = await addLink(path, targetPath)
       setRoot(updatedRoot)
       setAction(undefined)
     } catch (err: any) {
@@ -50,7 +60,7 @@ const AddNodeForm = (props: Props) => {
     setIsLoading(false)
   }
 
-  const disableButton = name?.trim()?.length === 0 || isLoading
+  const disableButton = name?.trim()?.length === 0 || !target || isLoading
 
   return (
     <>
@@ -62,7 +72,7 @@ const AddNodeForm = (props: Props) => {
       </PathDisplay>
 
       <Label>
-        Input the name of the <b>{type === 'add-file' ? 'file' : 'folder'}</b> to be created in the above path:
+        Input the name of the symlink to be created in the above path:
       </Label>
       
       <Input
@@ -71,6 +81,16 @@ const AddNodeForm = (props: Props) => {
         value={name}
         onChange={setName}
         onEnter={onRequest}
+      />
+
+      <Label>
+        Select the target element:
+      </Label>
+
+      <SearchSelector
+        options={options}
+        value={target}
+        onChange={selectOption}
       />
 
       <ButtonWrapper>
@@ -84,7 +104,7 @@ const AddNodeForm = (props: Props) => {
   )
 }
 
-export default AddNodeForm
+export default AddLinkForm
 
 const Label = styled.p`
   font-size: 1.1em;

@@ -4,7 +4,7 @@ import FolderIcon from '../assets/folder.svg'
 import FileIcon from '../assets/file.svg'
 import SymlinkIcon from '../assets/symlink.svg'
 
-export const getNodeIcon = (type: NodeType) => {
+export function getNodeIcon(type: NodeType) {
   switch(type) {
     case 'folder':
       return FolderIcon
@@ -41,4 +41,16 @@ export function findNodeByPath(startingNode: NodeElement, path: string): NodeEle
   }
 
   return currentNode
+}
+
+export function flattenNodes(node: NodeElement, acc: Array<NodeElement> = []): Array<NodeElement> {
+  acc.push(node)
+
+  Object.keys(node?.children || {}).forEach((child) => {
+    if (node.children && node.children[child]){
+      flattenNodes(node.children[child], acc)
+    }
+  })
+
+  return acc
 }

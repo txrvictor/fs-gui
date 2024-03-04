@@ -13,10 +13,12 @@ import { NodeElement } from './api/types'
 import DirectoryTree from './containers/directory-tree'
 import NodeInfo from './containers/node-info'
 import ActionsControl from './containers/actions-control'
+import { flattenNodes } from './utils/node'
 
 
 function App() {
   const [root, setRoot] = useState<NodeElement>()
+  const [flatRoot, setFlatRoot] = useState<Array<NodeElement>>([])
   const [selectedNode, setSelectedNode] = useState<NodeElement>()
   const [action, setAction] = useState<ActionType>()
 
@@ -37,25 +39,34 @@ function App() {
   }, [loadRoot])
 
   useEffect(() => {
+    // compute a flat array of all root elements
+    if (root) {
+      setFlatRoot(flattenNodes(root))
+    } else {
+      setFlatRoot([])
+    }
+  }, [root])
+
+  useEffect(() => {
     // reset action when selected node change
     setAction(undefined)
   }, [selectedNode])
 
   return (
-    <RootNodeContext.Provider value={{root, setRoot}}>
+    <RootNodeContext.Provider value={{root, setRoot, flatRoot}}>
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
           <TitleContainer>
             <h1>FS GUI</h1>
 
             <ButtonsContainer>
               <button onClick={() => {}}>
-                Save
+                Save Changes
               </button>
-              <button onClick={loadRoot}>
-                Reload
+              <button onClick={() => {}}>
+                Reload Last Save
               </button>
               <button onClick={() =>{}}>
-                Clean
+                Clear All
               </button>
             </ButtonsContainer>
           </TitleContainer>

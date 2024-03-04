@@ -7,14 +7,15 @@ import IconButton from '../components/icon-button'
 
 import CloseIcon from '../assets/close.svg'
 import AddNodeForm from './add-node-form'
+import AddLinkForm from './add-link-form'
 
 const renderForm = (action: ActionType) => {
     switch (action) {
       case 'add-file':
       case 'add-folder':
         return <AddNodeForm type={action} />
-      // case 'add-link':
-      //   return <AddLinkForm />
+      case 'add-link':
+        return <AddLinkForm />
       // case 'move':
       //   return <AddMoveForm />
       // case 'delete':
