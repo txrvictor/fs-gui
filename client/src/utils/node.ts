@@ -1,4 +1,20 @@
-import { NodeElement } from "../api/types";
+import { NodeElement, NodeType } from "../api/types";
+
+import FolderIcon from '../assets/folder.svg'
+import FileIcon from '../assets/file.svg'
+import SymlinkIcon from '../assets/symlink.svg'
+
+export const getNodeIcon = (type: NodeType) => {
+  switch(type) {
+    case 'folder':
+      return FolderIcon
+    case 'symbolicLink':
+      return SymlinkIcon
+    case 'file': 
+    default:
+      return FileIcon
+  }
+}
 
 export function findNodeByPath(startingNode: NodeElement, path: string): NodeElement | null {
   let currentNode: NodeElement | null = startingNode

@@ -6,8 +6,7 @@ export interface NodeElement {
   name: string
   type: NodeType
   properties?: {
-    hide: boolean
-    executable: boolean
+    [key: string]: boolean
   }
   children?: {
     [name: string]: NodeElement
