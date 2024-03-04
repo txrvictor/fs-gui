@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NodeElement, NodeType } from "../api/types";
 
 import FolderIcon from '../assets/folder.svg'

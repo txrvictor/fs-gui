@@ -6,6 +6,7 @@ import PropertiesPanel from './properties-panel'
 import TargetPanel from './target-panel'
 import Panel from '../components/panel'
 import { getNodeIcon } from '../utils/node'
+import ActionsPanel from './actions-panel'
 
 const NodeInfo = () => {
   const {selectedNode: node} = useContext(SelectedNodeContext)
@@ -14,22 +15,28 @@ const NodeInfo = () => {
 
   return (
     <Container>
-      <Header>
-        {node && (
-          <HeaderIcon>
-            <img 
-              src={getNodeIcon(node.type)}
-              // compensate different icon sizes
-              style={{height: iconSize, width: iconSize}}
-            />
-          </HeaderIcon>
-        )}
-        <Name>
-          {node?.name || 'Main Directory'}
-        </Name>
-      </Header>
-      <PropertiesPanel />
-      <TargetPanel />
+      <div>
+        <Header>
+          {node && (
+            <HeaderIcon>
+              <img 
+                src={getNodeIcon(node.type)}
+                // compensate different icon sizes
+                style={{height: iconSize, width: iconSize}}
+              />
+            </HeaderIcon>
+          )}
+          <Name>
+            {node?.name || 'Main Directory'}
+          </Name>
+        </Header>
+        <PropertiesPanel />
+        <TargetPanel />
+      </div>
+
+      <div>
+        <ActionsPanel />
+      </div>
     </Container>
   )
 }
@@ -37,10 +44,11 @@ const NodeInfo = () => {
 export default NodeInfo
 
 const Container = styled(Panel)`
-  flex: 1;
-  min-height: 400px;
-  height: 40vh;
+  height: 400px;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const Header = styled.div`

@@ -1,17 +1,24 @@
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { RootNodeContext, SelectedNodeContext } from './contexts'
+import { 
+  RootNodeContext,
+  SelectedNodeContext,
+  ActionContext,
+  ActionType,
+} from './contexts'
 import { getRoot } from './api'
 import { NodeElement } from './api/types'
 
 import DirectoryTree from './containers/directory-tree'
 import NodeInfo from './containers/node-info'
+import ActionsControl from './containers/actions-control'
 
 
 function App() {
   const [root, setRoot] = useState<NodeElement>()
   const [selectedNode, setSelectedNode] = useState<NodeElement>()
+  const [action, setAction] = useState<ActionType>()
 
   const loadRoot = useCallback(async () => {
     try {
@@ -32,26 +39,32 @@ function App() {
   return (
     <RootNodeContext.Provider value={{root, setRoot}}>
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
-        <TitleContainer>
-          <h1>FS GUI</h1>
+          <TitleContainer>
+            <h1>FS GUI</h1>
 
-          <ButtonsContainer>
-            <button onClick={() => {}}>
-              Save
-            </button>
-            <button onClick={loadRoot}>
-              Reload Root
-            </button>
-            <button onClick={() =>{}}>
-              Clean
-            </button>
-          </ButtonsContainer>
-        </TitleContainer>
+            <ButtonsContainer>
+              <button onClick={() => {}}>
+                Save
+              </button>
+              <button onClick={loadRoot}>
+                Reload
+              </button>
+              <button onClick={() =>{}}>
+                Clean
+              </button>
+            </ButtonsContainer>
+          </TitleContainer>
 
-        <Content>
-          <DirectoryTree />
-          <NodeInfo />
-        </Content>
+          <Content>
+            <DirectoryTree />
+
+            <ActionContext.Provider value={{action, setAction}}>
+              <RightSideContainer>
+                <NodeInfo />                
+                <ActionsControl />
+              </RightSideContainer>
+            </ActionContext.Provider>
+          </Content>
       </SelectedNodeContext.Provider>
     </RootNodeContext.Provider>
   )
@@ -71,6 +84,10 @@ const ButtonsContainer = styled.div`
   justify-content: center;
   align-items: center;
 
+  > button {
+    min-width: 95px;
+  }
+
   button + button {
     margin-left: 6px;
   }
@@ -86,6 +103,8 @@ const Content = styled.div`
   }
 `
 
-
+const RightSideContainer = styled.div`
+  flex: 1;
+`
 
 export default App

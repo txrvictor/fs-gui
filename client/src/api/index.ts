@@ -9,9 +9,41 @@ export const getRoot = () => {
   return api.get<NodeElement>(`/root`).then((response) => response.data)
 }
 
-export const toggleNodeProperties = (nodePath: string, property: string) => {
+export const addFile = (path: string) => {
+  return api.post<NodeElement>(`/node/file`, {
+    path,
+  }).then((response) => response.data)
+}
+
+export const addFolder = (path: string) => {
+  return api.post<NodeElement>(`/node/directory`, {
+    path,
+  }).then((response) => response.data)
+}
+
+export const addLink = (path: string, targetNode: string) => {
+  return api.post<NodeElement>(`/node/link`, {
+    path,
+    target: targetNode,
+  }).then((response) => response.data)
+}
+
+export const toggleNodeProperties = (path: string, property: string) => {
   return api.post<NodeElement>(`/node/change`, {
-    path: nodePath,
+    path,
     property,
+  }).then((response) => response.data)
+}
+
+export const moveNode = (path: string, destinationNode: string) => {
+  return api.post<NodeElement>(`/node/change`, {
+    path,
+    destination: destinationNode,
+  }).then((response) => response.data)
+}
+
+export const deleteNode = (path: string) => {
+  return api.post<NodeElement>(`/node/change`, {
+    path,
   }).then((response) => response.data)
 }
