@@ -57,18 +57,6 @@ function App() {
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
           <TitleContainer>
             <h1>FS GUI</h1>
-
-            <ButtonsContainer>
-              <button onClick={() => {}}>
-                Save Changes
-              </button>
-              <button onClick={() => {}}>
-                Reload Last Save
-              </button>
-              <button onClick={() =>{}}>
-                Clear All
-              </button>
-            </ButtonsContainer>
           </TitleContainer>
 
           <Content>
@@ -86,27 +74,14 @@ function App() {
   )
 }
 
+export default App
+
 const TitleContainer = styled.div`
   min-width: 780px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-`
-
-const ButtonsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  > button {
-    min-width: 95px;
-  }
-
-  button + button {
-    margin-left: 6px;
-  }
 `
 
 const Content = styled.div`
@@ -123,5 +98,3 @@ const RightSideContainer = styled.div`
   min-height: 750px;
   flex: 1;
 `
-
-export default App

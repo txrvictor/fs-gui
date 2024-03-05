@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express'
-import { body, query, validationResult } from 'express-validator'
+import { body, validationResult } from 'express-validator'
 import system from '../system'
 
 const router = Router()
