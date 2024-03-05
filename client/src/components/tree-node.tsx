@@ -26,6 +26,7 @@ const TreeNode = (props: Props) => {
   const isFolder = node.type === 'folder'
   const [expanded, setExpanded] = useState<boolean>(isFolder)
   const [loadedChildren, setLoadedChildren] = useState<Array<NodeElement>>()
+  const [isBrokenLink, setIsBrokenLink] = useState<boolean>(false)
 
   const loadChildren = useCallback((node: NodeElement) => {
     if (node.type === 'folder' && node.children) {
@@ -50,6 +51,8 @@ const TreeNode = (props: Props) => {
       if (originalNode) {
         selectedNode.targetRef = originalNode
         loadChildren(originalNode)
+      } else {
+        setIsBrokenLink(true)
       }
     }
     setSelectedNode(selectedNode)
@@ -69,7 +72,7 @@ const TreeNode = (props: Props) => {
       >
         <Icon src={getNodeIcon(node.type)} />
         {renderSymLinkIcon(node)}
-        <p>{node.name}{isFolder && ' /'}</p>
+        <p>{node.name}{isFolder && ' /'} {isBrokenLink && ` [ ! Not found ]`}</p>
       </NodeLabel>
 
       {expanded && childrenToRender}

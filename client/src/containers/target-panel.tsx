@@ -19,16 +19,18 @@ const TargetPanel = () => {
         {node?.target || 'No target'}
       </PathDisplay>
 
-      {node?.targetRef && (
-        <>
-          <SectionLabel>Refers to</SectionLabel>
-          <TargetRef>
+      <SectionLabel>Refers to</SectionLabel>
+      <TargetRef>
+        {node?.targetRef ? (
+          <>
             <p><b>[{node.targetRef.type.toUpperCase()}]:</b></p>
             <SmallIcon src={getNodeIcon(node.targetRef.type)} />
             <p>{node.targetRef.name}</p>
-          </TargetRef>
-        </>
-      )}
+          </>
+        ) : (
+          <p><b>{`[ ! Not found ]`}</b></p>
+        )}
+       </TargetRef>
    </>
   )
 }
