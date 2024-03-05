@@ -55,6 +55,8 @@ function App() {
   return (
     <RootNodeContext.Provider value={{root, setRoot, flatRoot}}>
       <SelectedNodeContext.Provider value={{selectedNode, setSelectedNode}}>
+        <ActionContext.Provider value={{action, setAction}}>
+
           <TitleContainer>
             <h1>FS GUI</h1>
           </TitleContainer>
@@ -62,13 +64,13 @@ function App() {
           <Content>
             <DirectoryTree />
 
-            <ActionContext.Provider value={{action, setAction}}>
-              <RightSideContainer>
-                <NodeInfo />                
-                <ActionsControl />
-              </RightSideContainer>
-            </ActionContext.Provider>
+            <RightSideContainer>
+              <NodeInfo />                
+              <ActionsControl />
+            </RightSideContainer>
           </Content>
+
+        </ActionContext.Provider>
       </SelectedNodeContext.Provider>
     </RootNodeContext.Provider>
   )

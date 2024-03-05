@@ -11,6 +11,7 @@ import ActionsPanel from './actions-panel'
 const NodeInfo = () => {
   const {selectedNode: node} = useContext(SelectedNodeContext)
 
+  // compensate different icon sizes
   const iconSize = node?.type === 'file' ? 32 : 36
 
   return (
@@ -21,7 +22,6 @@ const NodeInfo = () => {
             <HeaderIcon>
               <img 
                 src={getNodeIcon(node.type)}
-                // compensate different icon sizes
                 style={{height: iconSize, width: iconSize}}
               />
             </HeaderIcon>
@@ -30,7 +30,9 @@ const NodeInfo = () => {
             {node?.name || 'Main Directory'}
           </Name>
         </Header>
+
         <PropertiesPanel />
+
         <TargetPanel />
       </div>
 

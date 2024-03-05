@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEventHandler, useCallback, useContext } from 'react'
 import styled from 'styled-components'
 
@@ -17,7 +16,7 @@ const PropertiesPanel = () => {
     }
     const key: string = evt.target.name
 
-    // handle root element
+    // handle root element because we can't send an empty string
     const fullPath = node.fullPath === '' ? '/' : node.fullPath
     try {
       const updatedRoot = await toggleNodeProperties(fullPath, key)
