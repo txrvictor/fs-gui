@@ -3,16 +3,19 @@ import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
 import { addFile, addFolder } from '../api'
-import PathDisplay from '../components/path-display'
+import { NodeElement } from '../api/types'
+import FormLabel from '../components/form-label'
 import Input from '../components/input'
 import Button from '../components/button'
+import FormError from '../components/form-error'
 
 interface Props {
+  node: NodeElement
   type: 'add-file' | 'add-folder'
 }
 
 const AddNodeForm = (props: Props) => {
-  const {type} = props
+  const {node, type} = props
 
   const ref = useRef<HTMLInputElement>(null)
 
@@ -22,21 +25,20 @@ const AddNodeForm = (props: Props) => {
 
   const {setAction} = useContext(ActionContext)
   const {setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
+  const {setSelectedNode} = useContext(SelectedNodeContext)
 
   // auto focus on input
   useEffect(() => ref?.current?.focus(), [type])
 
   const onRequest = async () => {
-    setError(undefined)
-
     const nodeName = name?.trim()
-    if (!node || !nodeName || nodeName.length === 0) {
+    if (!nodeName || nodeName.length === 0) {
       return
     }
 
     const path = `${node.fullPath}/${nodeName}`
-
+    
+    setError(undefined)
     setIsLoading(true)
     try {
       const method = type === 'add-file' ? addFile : addFolder
@@ -55,61 +57,29 @@ const AddNodeForm = (props: Props) => {
 
   return (
     <>
-      <div>
-        <PathDisplay style={{
-          marginTop: '0.2em',
-          marginBottom: '1em',
-        }}>
-          {`${node?.fullPath}/<input>`}
-        </PathDisplay>
+      <FormLabel>
+        Input the name of the <b>{type === 'add-file' ? 'file' : 'folder'}</b> to be created in the current path:
+      </FormLabel>
+      
+      <Input
+        ref={ref}
+        placeholder='Name'
+        value={name}
+        onChange={setName}
+        onEnter={onRequest}
+      />
 
-        <Label>
-          Input the name of the <b>{type === 'add-file' ? 'file' : 'folder'}</b> to be created in the above path:
-        </Label>
-        
-        <Input
-          ref={ref}
-          placeholder='Name'
-          value={name}
-          onChange={setName}
-          onEnter={onRequest}
-        />
-      </div>
+      <CustomButton onClick={onRequest} disabled={disableButton}>
+        Create
+      </CustomButton>
 
-      <ButtonWrapper>
-        <Button onClick={onRequest} disabled={disableButton}>
-          Create
-        </Button>
-      </ButtonWrapper>
-
-      {error !== undefined && <Error>{error}</Error>}
+      {error !== undefined && <FormError>{error}</FormError>}
     </>
   )
 }
 
 export default AddNodeForm
 
-const Label = styled.p`
-  font-size: 1.1em;
-  font-style: italic;
-  text-align: left;
+const CustomButton = styled(Button)`
   margin-top: 0.8em;
-  margin-bottom: 0.2em;
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6em;
-`
-
-const Error = styled.div`
-  margin-top: 1.2em;
-  font-size: 0.9em;
-  font-weight: 500;
-  text-align: left;
-  background-color: #FEC5BB;
-  border: 2px red solid;
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
 `

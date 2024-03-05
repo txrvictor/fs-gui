@@ -3,25 +3,33 @@ import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
 import { deleteNode } from '../api'
-import PathDisplay from '../components/path-display'
+import { NodeElement } from '../api/types'
+import FormLabel from '../components/form-label'
+import FormError from '../components/form-error'
 import Button from '../components/button'
 
-const DeleteNodeForm = () => {
+interface Props {
+  node: NodeElement
+}
+
+const DeleteNodeForm = (props: Props) => {
+  const {node} = props
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
 
   const {setAction} = useContext(ActionContext)
   const {setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
+  const {setSelectedNode} = useContext(SelectedNodeContext)
 
   const onRequest = async () => {
-    setError(undefined)
-
     if (!node) {
       return
     }
-
+    
     const path = node.fullPath
+
+    setError(undefined)
     setIsLoading(true)
     try {
       const updatedRoot = await deleteNode(path)
@@ -49,61 +57,26 @@ const DeleteNodeForm = () => {
 
   return (
     <>
-      <div>
-        <PathDisplay style={{
-          marginTop: '0.2em',
-          marginBottom: '1em',
-        }}>
-          {node?.fullPath || '/'}
-        </PathDisplay>
+      <FormLabel style={{marginBottom: 0}}>
+        {`Are you sure you want to delete this ${description}?`}
+      </FormLabel>
 
-        <Label>
-          {`Are you sure you want to delete this ${description}?`}
-        </Label>
-      </div>
-      
-      <ButtonWrapper>
-        <CustomButton onClick={onRequest} disabled={isLoading}>
-          Delete
-        </CustomButton>
-      </ButtonWrapper>
+      <CustomButton onClick={onRequest} disabled={isLoading}>
+        Delete
+      </CustomButton>
 
-      {error !== undefined && <Error>{error}</Error>}
+      {error !== undefined && <FormError>{error}</FormError>}
     </>
   )
 }
 
 export default DeleteNodeForm
 
-const Label = styled.p`
-  font-size: 1.1em;
-  font-style: italic;
-  text-align: left;
-  margin-top: 0.8em;
-  margin-bottom: 0.2em;
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6em;
-`
-
 const CustomButton = styled(Button)`
   background-color: #FEC5BB;
+  margin-top: 0.8em;
 
   &:hover {
     border-color: #CC9389;
   }
-`
-
-const Error = styled.div`
-  margin-top: 1.2em;
-  font-size: 0.9em;
-  font-weight: 500;
-  text-align: left;
-  background-color: #FEC5BB;
-  border: 2px red solid;
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
 `

@@ -3,7 +3,9 @@ import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
 import { addLink } from '../api'
-import PathDisplay from '../components/path-display'
+import { NodeElement } from '../api/types'
+import FormLabel from '../components/form-label'
+import FormError from '../components/form-error'
 import Input from '../components/input'
 import SearchSelector from '../components/search-selector'
 import Button from '../components/button'
@@ -13,12 +15,18 @@ interface TargetOption {
   label: string
 }
 
-const AddLinkForm = () => {
+interface Props {
+  node: NodeElement
+}
+
+const AddLinkForm = (props: Props) => {
+  const {node} = props
+
   const ref = useRef<HTMLInputElement>(null)
 
   const {setAction} = useContext(ActionContext)
   const {flatRoot, setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
+  const {setSelectedNode} = useContext(SelectedNodeContext)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
@@ -38,16 +46,15 @@ const AddLinkForm = () => {
   useEffect(() => ref?.current?.focus(), [])
 
   const onRequest = async () => {
-    setError(undefined)
-
     const nodeName = name?.trim()
-    if (!node || !nodeName || nodeName.length === 0 || !target) {
+    if (!nodeName || nodeName.length === 0 || !target) {
       return
     }
 
     const path = `${node.fullPath}/${nodeName}`
     const targetPath = target.value
-
+    
+    setError(undefined)
     setIsLoading(true)
     try {
       const updatedRoot = await addLink(path, targetPath)
@@ -65,71 +72,39 @@ const AddLinkForm = () => {
 
   return (
     <>
-      <div>
-        <PathDisplay style={{
-          marginTop: '0.2em',
-          marginBottom: '1em',
-        }}>
-          {`${node?.fullPath}/<input>`}
-        </PathDisplay>
+      <FormLabel>
+        Input the name of the symlink to be created in the current path:
+      </FormLabel>
+      
+      <Input
+        ref={ref}
+        placeholder='Name'
+        value={name}
+        onChange={setName}
+        onEnter={onRequest}
+      />
 
-        <Label>
-          Input the name of the symlink to be created in the above path:
-        </Label>
-        
-        <Input
-          ref={ref}
-          placeholder='Name'
-          value={name}
-          onChange={setName}
-          onEnter={onRequest}
-        />
+      <FormLabel>
+        Select the target element:
+      </FormLabel>
 
-        <Label>
-          Select the target element:
-        </Label>
+      <SearchSelector
+        options={options}
+        value={target}
+        onChange={selectOption}
+      />
 
-        <SearchSelector
-          options={options}
-          value={target}
-          onChange={selectOption}
-        />
-      </div>
+      <CustomButton onClick={onRequest} disabled={disableButton}>
+        Create
+      </CustomButton>
 
-      <ButtonWrapper>
-        <Button onClick={onRequest} disabled={disableButton}>
-          Create
-        </Button>
-      </ButtonWrapper>
-
-      {error !== undefined && <Error>{error}</Error>}
+      {error !== undefined && <FormError>{error}</FormError>}
     </>
   )
 }
 
 export default AddLinkForm
 
-const Label = styled.p`
-  font-size: 1.1em;
-  font-style: italic;
-  text-align: left;
+const CustomButton = styled(Button)`
   margin-top: 0.8em;
-  margin-bottom: 0.2em;
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6em;
-`
-
-const Error = styled.div`
-  margin-top: 1.2em;
-  font-size: 0.9em;
-  font-weight: 500;
-  text-align: left;
-  background-color: #FEC5BB;
-  border: 2px red solid;
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
 `

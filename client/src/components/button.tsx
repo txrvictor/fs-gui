@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export default styled.button`
+  min-width: 94px;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;

@@ -3,7 +3,9 @@ import styled from 'styled-components'
 
 import { ActionContext, RootNodeContext, SelectedNodeContext } from '../contexts'
 import { moveNode } from '../api'
-import PathDisplay from '../components/path-display'
+import { NodeElement } from '../api/types'
+import FormLabel from '../components/form-label'
+import FormError from '../components/form-error'
 import SearchSelector from '../components/search-selector'
 import Button from '../components/button'
 
@@ -12,12 +14,18 @@ interface TargetOption {
   label: string
 }
 
-const ModeNodeForm = () => {
+interface Props {
+  node: NodeElement
+}
+
+const ModeNodeForm = (props: Props) => {
+  const {node} = props
+
   const ref = useRef<HTMLInputElement>(null)
 
   const {setAction} = useContext(ActionContext)
   const {flatRoot, setRoot} = useContext(RootNodeContext)
-  const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)
+  const {setSelectedNode} = useContext(SelectedNodeContext)
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>()
@@ -39,15 +47,14 @@ const ModeNodeForm = () => {
   useEffect(() => ref?.current?.focus(), [])
 
   const onRequest = async () => {
-    setError(undefined)
-
-    if (!node || !target) {
+    if (!target) {
       return
     }
 
     const currentPath = node.fullPath
     const targetPath = target.value
-
+    
+    setError(undefined)
     setIsLoading(true)
     try {
       const updatedRoot = await moveNode(currentPath, targetPath)
@@ -65,59 +72,27 @@ const ModeNodeForm = () => {
 
   return (
     <>
-      <div>
-        <PathDisplay style={{
-          marginTop: '0.2em',
-          marginBottom: '1em',
-        }}>
-          {`${node?.fullPath}/<input>`}
-        </PathDisplay>
+      <FormLabel>
+        Select the target folder:
+      </FormLabel>
 
-        <Label>
-          Select the target folder:
-        </Label>
+      <SearchSelector
+        options={options}
+        value={target}
+        onChange={selectOption}
+      />
 
-        <SearchSelector
-          options={options}
-          value={target}
-          onChange={selectOption}
-        />
-      </div>
+      <CustomButton onClick={onRequest} disabled={disableButton}>
+        Move
+      </CustomButton>
 
-      <ButtonWrapper>
-        <Button onClick={onRequest} disabled={disableButton}>
-          Move
-        </Button>
-      </ButtonWrapper>
-
-      {error !== undefined && <Error>{error}</Error>}
+      {error !== undefined && <FormError>{error}</FormError>}
     </>
   )
 }
 
 export default ModeNodeForm
 
-const Label = styled.p`
-  font-size: 1.1em;
-  font-style: italic;
-  text-align: left;
+const CustomButton = styled(Button)`
   margin-top: 0.8em;
-  margin-bottom: 0.2em;
-`
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.6em;
-`
-
-const Error = styled.div`
-  margin-top: 1.2em;
-  font-size: 0.9em;
-  font-weight: 500;
-  text-align: left;
-  background-color: #FEC5BB;
-  border: 2px red solid;
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
 `

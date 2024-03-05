@@ -120,6 +120,7 @@ const Content = styled.div`
 `
 
 const RightSideContainer = styled.div`
+  min-height: 750px;
   flex: 1;
 `
 

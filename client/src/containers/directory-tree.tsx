@@ -40,7 +40,7 @@ export default DirectoryTree
 
 const Container = styled(Panel)`
   flex: 2;
-  min-height: 600px;
+  min-height: 750px;
   height: 70vh;
   overflow: auto;
 `
