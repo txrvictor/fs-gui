@@ -28,7 +28,10 @@ const ModeNodeForm = () => {
     // only display folders as destination
     return flatRoot
       .filter((n) => n.type === 'folder')
-      .map((n) => ({value: n.fullPath, label: n.fullPath}))
+      .map((n) => ({
+        value: n.fullPath || '/',
+        label: n.fullPath || 'Main Directory',
+      }))
   }, [flatRoot])
   const selectOption = useCallback((e: any) => setTarget(e), [])
 
