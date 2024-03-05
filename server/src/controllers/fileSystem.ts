@@ -180,6 +180,18 @@ class FileSystem {
     delete parentNode.children[nodeName]
   }
 
+  private recurviseFullPathUpdate(node: BaseNode, newBasePath: string) {
+    const newPath = `${trimSlashes(newBasePath)}/${trimSlashes(node.name)}`
+    node.fullPath = newPath
+
+    const childNodes = (<FolderNode>node).children
+    if (childNodes !== undefined) {
+      for (const [_, child] of Object.entries(childNodes)) {
+        this.recurviseFullPathUpdate(child, newPath)
+      }
+    }
+  }
+
   moveNode(path: string, destinationPath: string) {
     const nodeName = this.getNodeName(path)
     const parentNode = this.getParentNode(path)
@@ -201,6 +213,14 @@ class FileSystem {
     // update path and transfer to new parent
     node.fullPath = `${trimSlashes(destinationPath)}/${trimSlashes(nodeName)}`
     destFolder.children[nodeName] = node
+
+    // recursively update fullPath of children
+    const childNodes = (<FolderNode>node).children
+    if (childNodes !== undefined) {
+      for (const [_, child] of Object.entries(childNodes)) {
+        this.recurviseFullPathUpdate(child, node.fullPath)
+      }
+    }
   }
 
   private recursivePropertyChange(node: BaseNode, property: string, value: boolean) {

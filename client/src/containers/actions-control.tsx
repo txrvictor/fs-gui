@@ -8,6 +8,7 @@ import IconButton from '../components/icon-button'
 import CloseIcon from '../assets/close.svg'
 import AddNodeForm from './add-node-form'
 import AddLinkForm from './add-link-form'
+import MoveNodeForm from './move-node-form'
 import DeleteNodeForm from './delete-node-form'
 
 const renderForm = (action: ActionType) => {
@@ -17,8 +18,8 @@ const renderForm = (action: ActionType) => {
         return <AddNodeForm type={action} />
       case 'add-link':
         return <AddLinkForm />
-      // case 'move':
-      //   return <AddMoveForm />
+      case 'move':
+        return <MoveNodeForm />
       case 'delete':
         return <DeleteNodeForm />
       default:
