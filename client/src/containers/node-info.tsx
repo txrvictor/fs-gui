@@ -8,6 +8,10 @@ import Panel from '../components/panel'
 import { getNodeIcon } from '../utils/node'
 import ActionsPanel from './actions-panel'
 
+/**
+ * Displays information and available action buttons for the currently
+ * selected element on the FS tree.
+ */
 const NodeInfo = () => {
   const {selectedNode: node} = useContext(SelectedNodeContext)
 

@@ -10,6 +10,10 @@ import AddLink from '../assets/add-link.svg'
 import Move from '../assets/move.svg'
 import Delete from '../assets/delete.svg'
 
+/**
+ * Used within the NodeInfo Panel to display available action buttons
+ * based on the type of the selected element of the FS tree.
+ */
 const ActionsPanel = () => {
   const {selectedNode: node} = useContext(SelectedNodeContext)
   const {action, setAction} = useContext(ActionContext)

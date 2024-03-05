@@ -6,6 +6,10 @@ import { toggleNodeProperties } from '../api'
 import Checkbox from '../components/checkbox'
 import { findNodeByPath } from '../utils/node'
 
+/**
+ * Lists available properties for currently selected FS tree element. Also contains the
+ * logic to update those properties by calling the API.
+ */
 const PropertiesPanel = () => {
   const {setRoot} = useContext(RootNodeContext)
   const {selectedNode: node, setSelectedNode} = useContext(SelectedNodeContext)

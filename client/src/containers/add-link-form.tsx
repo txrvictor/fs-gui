@@ -19,6 +19,10 @@ interface Props {
   node: NodeElement
 }
 
+/**
+ * Form used to add a symbolic link inside the current selected
+ * element of the FS tree.
+ */
 const AddLinkForm = (props: Props) => {
   const {node} = props
 

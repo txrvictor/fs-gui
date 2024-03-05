@@ -14,6 +14,10 @@ interface Props {
   type: 'add-file' | 'add-folder'
 }
 
+/**
+ * Form for adding either a file or a folder within the selected
+ * folder element of the FS tree.
+ */
 const AddNodeForm = (props: Props) => {
   const {node, type} = props
 

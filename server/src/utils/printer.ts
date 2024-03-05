@@ -17,6 +17,9 @@ function getProperties(n: FileNode | FolderNode): string {
   return props.length > 0 ? `[${props.join(', ')}]` : ''
 }
 
+/**
+ * Class used to print a fs tree on the terminal.
+ */
 class SystemHierarchyPrinter {
   fs: FileSystem
 

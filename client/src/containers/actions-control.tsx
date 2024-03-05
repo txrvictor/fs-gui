@@ -30,6 +30,11 @@ const renderForm = (node: NodeElement, action: ActionType) => {
     }
 }
 
+/**
+ * Panel displayed under the selected element information panel on 
+ * the right side of the UI. Used as a wrapper for the different 
+ * operation forms.
+ */
 const ActionsControl = () => {
   const {action, setAction} = useContext(ActionContext)
   const {selectedNode} = useContext(SelectedNodeContext)

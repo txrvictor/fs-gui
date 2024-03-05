@@ -11,6 +11,9 @@ import { sanitizePath, trimSlashes } from '../utils/path'
 
 export type SystemNode = FileNode | FolderNode | SymbolicLinkNode
 
+/**
+ * Class to generate an instance of a File System and execute basic operations.
+ */
 class FileSystem {
   root: FolderNode
 

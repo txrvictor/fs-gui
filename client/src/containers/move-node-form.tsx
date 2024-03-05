@@ -18,7 +18,11 @@ interface Props {
   node: NodeElement
 }
 
-const ModeNodeForm = (props: Props) => {
+/**
+ * Form to display options to move the current selected element of the
+ * FS tree into a new folder.
+ */
+const MoveNodeForm = (props: Props) => {
   const {node} = props
 
   const ref = useRef<HTMLInputElement>(null)
@@ -91,7 +95,7 @@ const ModeNodeForm = (props: Props) => {
   )
 }
 
-export default ModeNodeForm
+export default MoveNodeForm
 
 const CustomButton = styled(Button)`
   margin-top: 0.8em;

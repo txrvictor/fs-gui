@@ -5,6 +5,10 @@ import { SelectedNodeContext } from '../contexts'
 import PathDisplay from '../components/path-display'
 import { getNodeIcon } from '../utils/node'
 
+/**
+ * Used mainly to display the target information of Symbolic Link
+ * elements when they're selected on the FS tree.
+ */
 const TargetPanel = () => {
   const {selectedNode: node} = useContext(SelectedNodeContext)
 

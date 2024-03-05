@@ -5,6 +5,9 @@ import { RootNodeContext, SelectedNodeContext } from '../contexts'
 import Panel from '../components/panel'
 import TreeNode from '../components/tree-node'
 
+/**
+ * Main FS tree panel component. Renders the full FS tree based on the root element.
+ */
 const DirectoryTree = () => {
   const {root} = useContext(RootNodeContext)
   const {selectedNode, setSelectedNode} = useContext(SelectedNodeContext)

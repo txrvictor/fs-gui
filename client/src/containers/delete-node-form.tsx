@@ -12,6 +12,9 @@ interface Props {
   node: NodeElement
 }
 
+/**
+ * Form used for deleting the current selected element of the FS tree.
+ */
 const DeleteNodeForm = (props: Props) => {
   const {node} = props
 

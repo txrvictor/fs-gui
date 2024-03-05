@@ -4,6 +4,12 @@ import FolderIcon from '../assets/folder.svg'
 import FileIcon from '../assets/file.svg'
 import SymlinkIcon from '../assets/symlink.svg'
 
+/**
+ * Returns an svg icon based on node type.
+ * 
+ * @param type node's type 
+ * @returns svg icon
+ */
 export function getNodeIcon(type: NodeType) {
   switch(type) {
     case 'folder':
@@ -16,6 +22,14 @@ export function getNodeIcon(type: NodeType) {
   }
 }
 
+/**
+ * Search for a node within the starting node given a string path. Returns the node if found,
+ * otherwise returns null.
+ * 
+ * @param startingNode starting node to start the search
+ * @param path path of the wanted node taking the starting node as base
+ * @returns the node in the path or null if not found
+ */
 export function findNodeByPath(startingNode: NodeElement, path: string): NodeElement | null {
   let currentNode: NodeElement | null = startingNode
 
@@ -43,6 +57,13 @@ export function findNodeByPath(startingNode: NodeElement, path: string): NodeEle
   return currentNode
 }
 
+/**
+ * Converts an element and it's children to an array of elements.
+ * 
+ * @param node starting node object to be converted in a node array
+ * @param acc auxiliar variable used recursively to flatten the nested objects
+ * @returns an array of node elements
+ */
 export function flattenNodes(node: NodeElement, acc: Array<NodeElement> = []): Array<NodeElement> {
   acc.push(node)
 
