@@ -182,7 +182,7 @@ class FileSystem {
 
   private recurviseFullPathUpdate(node: BaseNode, newBasePath: string) {
     const newPath = `${trimSlashes(newBasePath)}/${trimSlashes(node.name)}`
-    node.fullPath = newPath
+    node.fullPath = trimSlashes(newPath)
 
     const childNodes = (<FolderNode>node).children
     if (childNodes !== undefined) {
@@ -211,7 +211,8 @@ class FileSystem {
     delete parentNode.children[nodeName]
 
     // update path and transfer to new parent
-    node.fullPath = `${trimSlashes(destinationPath)}/${trimSlashes(nodeName)}`
+    const newPath = `${trimSlashes(destinationPath)}/${trimSlashes(nodeName)}`
+    node.fullPath = trimSlashes(newPath)
     destFolder.children[nodeName] = node
 
     // recursively update fullPath of children
