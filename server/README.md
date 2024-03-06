@@ -11,7 +11,7 @@ Node.js server application that contains all the logic for managing a mock file 
   - Symbolic Links (of files and folders)
 - Allowing moving files, directories, and symbolic links inside folders
 - Allowing deletion of any elements except the root directory
-- Allowing changing pre-defined properties of files and directories (hidden, executable, read-only)
+- Allowing changing predefined properties of files and directories (hidden, executable, read-only)
 
 
 ## Technologies
@@ -29,7 +29,7 @@ Please refer to the **package.json** file for more details such as versions.
 | nodemon | Simplifies development by monitoring and auto-reloading the server when source code changes |
 
 
-## Pre-requisites & Execution
+## Prerequisites & Execution
 
 It's necessary to use Node's package manager, [`npm`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager), to execute the server locally in development mode. For that, it's necessary to:
 

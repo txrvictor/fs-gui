@@ -7,7 +7,7 @@ React application to display a Web interface for managing a mock file system. Al
 - Create symbolic links to files or folders
 - Move files, directories and symbolic links
 - Delete files, directories and symbolic links
-- Change pre-defined properties of files and directories (hidden, executable, read-only)
+- Change predefined properties of files and directories (hidden, executable, read-only)
 
 ## Technologies
 
@@ -23,7 +23,7 @@ Please refer to the **package.json** file for more details.
 | vite | Scaffolding the React application with Typescript and simplifying development by using the dev server with auto-reload |
 
 
-## Pre-requisites & Execution
+## Prerequisites & Execution
 
 It's necessary to use Node's package manager, [`npm`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager), to execute the app locally in development mode. For that, it's necessary to:
 

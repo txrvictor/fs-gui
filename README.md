@@ -19,7 +19,7 @@ The **server** is a project using [`Node.js`](https://nodejs.org/) for serving a
 Unit tests are written using [`Jest`](https://jestjs.io/). During development it uses the [`nodemon`](https://nodemon.io/) tool to auto-reload whenever some source code change happens.
 
 
-## Pre-requisites
+## Prerequisites
 
 In order to run both the client and the server, it's necessary to use Node's package manager, [`npm`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager). For that, please follow Node's installation guideline for your host OS:
 
