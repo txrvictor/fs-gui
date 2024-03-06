@@ -12,19 +12,19 @@ The **client** is a project scaffolded with [`Vite`](https://vitejs.dev/) runnin
 It's using a combination of React, [`TypeScript`](https://www.typescriptlang.org/) as the programming language, [`styled-components`](https://styled-components.com/) for simplifying adding CSS styles to the components and [`React Select`](https://react-select.com/) for searchable dropdowns in order to create an interface to manage the file system's prototype. To retrieve the structure of the file system data, it calls the **server**'s API using [`Axios`](https://axios-http.com/).
 
 
-
 ## Server
 
 The **server** is a project using [`Node.js`](https://nodejs.org/) for serving a REST API that enable the management of the mock file system. It uses [`TypeScript`](https://www.typescriptlang.org/) as programming language, [`Express.js`](https://expressjs.com/) for serving the API (plus some auxiliary Express libraries for functionality such as [`cors`](https://github.com/expressjs/cors) and [`express-validator`](https://express-validator.github.io/)) and [`uuid`](https://github.com/uuidjs/uuid) as an unique ID generator tool.
 
-Unit tests are written using [`Jest`](https://jestjs.io/). During development it uses the [`nodemon`](https://nodemon.io/) to auto-reload whenever some source code change happens.
+Unit tests are written using [`Jest`](https://jestjs.io/). During development it uses the [`nodemon`](https://nodemon.io/) tool to auto-reload whenever some source code change happens.
 
 
 ## Pre-requisites
 
 In order to run both the client and the server, it's necessary to use Node's package manager, [`npm`](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager). For that, please follow Node's installation guideline for your host OS:
 
-- Install [Node.js](https://nodejs.org/)
+- Install [Node.js](https://nodejs.org/) (tested on `v20.10.0` but any newer version should be fine)
+- Installation guideline can be found [here](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs)
 
 
 ## How to Execute
