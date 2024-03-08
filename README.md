@@ -2,6 +2,8 @@
 
 Simple web GUI for a mock file system representation. Displays a file system hierarchical tree with toggable folders, files and symbolic links. It enables some actions such as creating, moving, deleting and changing a fixed set of properties for each element.
 
+![fs-gui](https://github.com/txrvictor/fs-gui/assets/75559055/212ecc83-22ac-448f-98f9-250e8127b716)
+
 This project is divided in two parts: a React `client` project and a Node.js `server` project.
 
 
